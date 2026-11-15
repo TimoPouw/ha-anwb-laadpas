@@ -241,3 +241,23 @@ async def test_missing_tenant_keeps_stored_value(
     auth = mock_config_entry.data[CONF_AUTH_CONFIG]
     assert auth["client_id"] == "new-client-id"
     assert auth["tenant_id"] == TENANT_ID
+
+
+async def test_first_session_of_new_account_fires_event(
+    hass: HomeAssistant,
+    fake_api: FakeDeftpower,
+    mock_config_entry: MockConfigEntry,
+    freezer: FrozenDateTimeFactory,
+) -> None:
+    events: list[Any] = []
+    _listen(hass, events)
+    template = fake_api.sessions[0]
+    fake_api.sessions = []
+    await _setup(hass, mock_config_entry)
+    assert mock_config_entry.runtime_data.data.sessions == []
+
+    fake_api.add_session(_new_session(template, "NLAAA-1", "2026-11-14T10:00:00Z"))
+    freezer.tick(timedelta(minutes=31))
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done()
+    assert [e.data["session_id"] for e in events] == ["NLAAA-1"]

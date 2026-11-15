@@ -104,10 +104,13 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
             hass, STORAGE_VERSION, f"{DOMAIN}.{entry.entry_id}"
         )
         self._sessions: dict[str, ChargingSession] = {}
+        # True once the full history has been loaded; events fire after that.
+        self._synced = False
 
     async def _async_setup(self) -> None:
         """Load the sessions we already know from storage."""
         stored = await self._store.async_load() or {}
+        self._synced = bool(stored.get("synced"))
         for raw in stored.get("sessions", []):
             try:
                 session = ChargingSession.from_storage(raw)
@@ -122,7 +125,7 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         return self.config_entry.options.get(CONF_CARD_NAMES, {}).get(card_id)
 
     async def _async_update_data(self) -> LaadpasData:
-        first_sync = not self._sessions
+        first_sync = not self._synced
         try:
             fetched = await self._async_fetch_recent(first_sync)
         except AuthError as err:
@@ -141,9 +144,13 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
                 self._sessions[session.id] = session
                 changed = True
 
-        if changed:
+        if changed or first_sync:
+            self._synced = True
             await self._store.async_save(
-                {"sessions": [s.as_storage() for s in self._sessions.values()]}
+                {
+                    "synced": True,
+                    "sessions": [s.as_storage() for s in self._sessions.values()],
+                }
             )
 
         if first_sync:
