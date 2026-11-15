@@ -16,19 +16,20 @@ endorsed by ANWB; the logo is only used to make the integration recognisable.
 
 ## Showing the icon in Home Assistant and HACS
 
-Home Assistant and HACS load integration icons from
-[brands.home-assistant.io](https://brands.home-assistant.io), which is built
-from the [home-assistant/brands](https://github.com/home-assistant/brands)
-repository. To get the icon there:
+Since Home Assistant 2026.3, custom integrations can ship their own brand
+images. Copies of `icon.png` and `icon@2x.png` are in
+`custom_components/anwb_laadpas/brand/`, so the icon shows up on the
+integration pages once the integration is installed and Home Assistant has
+restarted. A hard refresh of the browser (Ctrl+F5) may be needed.
 
-1. Fork `home-assistant/brands`.
-2. Add `icon.png` and `icon@2x.png` from this folder to
-   `custom_integrations/anwb_laadpas/` in your fork.
-3. Open a pull request. The folder name must match the `domain` in
-   `custom_components/anwb_laadpas/manifest.json`.
+On older Home Assistant versions, and in store previews before installation,
+icons come from [brands.home-assistant.io](https://brands.home-assistant.io).
+To get the icon there as well, open a pull request to
+[home-assistant/brands](https://github.com/home-assistant/brands) that adds
+both files to `custom_integrations/anwb_laadpas/`.
 
-Once it is merged, the icon shows up in Home Assistant and HACS. Until then the
-integration shows a placeholder icon.
+After regenerating, copy both files to `custom_components/anwb_laadpas/brand/`
+too.
 
 ## Regenerating the icons
 
