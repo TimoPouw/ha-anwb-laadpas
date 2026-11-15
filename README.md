@@ -142,7 +142,8 @@ monthly energy graph and tables of sessions and invoices is in
 The **Sessions** sensor has an attribute `sessions` with every session, newest
 first. Each row has `session_id`, `start`, `end` (local time), `duration_minutes`,
 `energy_kwh`, `cost`, `card` (your card name, or the card number),
-`location_name` and `city`. The list is not stored in the recorder database.
+`location_name`, `address`, `postal_code`, `city`, `country` and
+`operator_name`. The list is not stored in the recorder database.
 
 A table of the latest 50 sessions with a Markdown card. Check the entity id of
 the Sessions sensor in its settings; with Home Assistant in Dutch it may be

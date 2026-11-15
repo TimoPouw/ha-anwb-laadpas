@@ -186,7 +186,10 @@ class ChargingSession:
             "cost": self.cost,
             "card": card_name or self.card_number,
             "location_name": self.location_name,
+            "address": self.address,
+            "postal_code": self.postal_code,
             "city": self.city,
+            "country": self.country,
             "operator_name": self.details.operator_name if self.details else None,
         }
 

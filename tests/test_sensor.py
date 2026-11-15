@@ -152,7 +152,10 @@ async def test_sessions_sensor_lists_all_sessions(
         "cost",
         "card",
         "location_name",
+        "address",
+        "postal_code",
         "city",
+        "country",
         "operator_name",
     }
 
