@@ -34,13 +34,13 @@ import base64
 import hashlib
 import json
 import os
+from pathlib import Path
 import secrets
 import sys
+from typing import Any
 import urllib.error
 import urllib.parse
 import urllib.request
-from pathlib import Path
-from typing import Any
 
 IDP = "https://account.deftpower.com"
 TOKEN_URL = f"{IDP}/connect/token"
@@ -115,7 +115,7 @@ def http(
     except urllib.error.HTTPError as err:
         return err.code, dict(err.headers), err.read()
     except urllib.error.URLError as err:
-        sys.exit(f"Network error calling {url.split('?')[0]}: {err.reason}")
+        sys.exit(f"Network error calling {url.split('?', maxsplit=1)[0]}: {err.reason}")
 
 
 def jwt_claims(token: str) -> dict[str, Any]:
@@ -253,7 +253,9 @@ def login_finish(pasted: str) -> str:
     saved = json.loads(PKCE_FILE.read_text())
     query = urllib.parse.parse_qs(urllib.parse.urlparse(pasted.strip()).query)
     if "error" in query:
-        log(f"[login] IdP returned error: {query.get('error')} {query.get('error_description')}")
+        log(
+            f"[login] IdP returned error: {query.get('error')} {query.get('error_description')}"
+        )
         sys.exit(1)
     if query.get("state", [None])[0] != saved["state"]:
         log("[login] state mismatch, aborting")
@@ -372,7 +374,9 @@ def main() -> None:
             sys.exit("Usage: probe.py login-finish '<redirect url>'")
         access_token = login_finish(sys.argv[2])
     elif mode == "refresh":
-        token = os.environ.get("ANWB_REFRESH_TOKEN") or load_env().get("ANWB_REFRESH_TOKEN")
+        token = os.environ.get("ANWB_REFRESH_TOKEN") or load_env().get(
+            "ANWB_REFRESH_TOKEN"
+        )
         if not token:
             sys.exit("Set ANWB_REFRESH_TOKEN in the environment or in .env first.")
         access_token = do_refresh(token)

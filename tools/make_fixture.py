@@ -7,10 +7,10 @@ are included: missing end time, missing costs, fractional seconds, two cards
 and several charge point operators.
 """
 
-import json
-import random
 from datetime import UTC, datetime, timedelta
+import json
 from pathlib import Path
+import random
 
 random.seed(42)
 OUT = Path(__file__).resolve().parent.parent / "tests" / "fixtures" / "sessions.json"
@@ -33,6 +33,14 @@ PROFILE = {
     "isShared": False,
 }
 
+
+def stamp(moment: datetime, fractional: bool) -> str:
+    """Format like the API: whole seconds, sometimes with milliseconds."""
+    if fractional:
+        return moment.strftime("%Y-%m-%dT%H:%M:%S.%f")[:23] + "Z"
+    return moment.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+
+
 items = []
 start = datetime(2026, 11, 8, 12, 15, 16, tzinfo=UTC)
 for i in range(30):
@@ -41,16 +49,14 @@ for i in range(30):
     duration = timedelta(minutes=random.randint(20, 240))
     kwh = round(random.uniform(3, 45), 2)
     frac = i % 7 == 3
-    fmt = "%Y-%m-%dT%H:%M:%S.%f" if frac else "%Y-%m-%dT%H:%M:%S"
-    stamp = lambda d: d.strftime(fmt)[:23 if frac else 19] + "Z"  # noqa: E731
     session_no = 900000000 - i
     items.append(
         {
             "chargingSession": {
                 "id": f"NL{loc[5]}-{session_no}",
                 "sessionId": str(session_no),
-                "startDateTime": stamp(start),
-                "endDateTime": None if i == 12 else stamp(start + duration),
+                "startDateTime": stamp(start, frac),
+                "endDateTime": None if i == 12 else stamp(start + duration, frac),
                 "sessionStatus": "COMPLETED",
                 "kwh": kwh,
                 "currency": "EUR",
