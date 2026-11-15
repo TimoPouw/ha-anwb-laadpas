@@ -74,11 +74,11 @@ async def test_discovery(hass: HomeAssistant, fake_api: FakeDeftpower) -> None:
     assert config.tenant_id == TENANT_ID
     assert config.scope == "openid backend offline_access"
     assert config.redirect_uri == "https://laadpas.anwb.nl/account/login"
-    # The tenant is resolved from the Origin header of the web app.
+    # The tenant is resolved from the Referer header of the web app.
     tenant_call = next(
         c for c in fake_api.mocker.mock_calls if "IdentityTenant" in str(c[1])
     )
-    assert tenant_call[3]["Origin"] == "https://laadpas.anwb.nl"
+    assert tenant_call[3]["Referer"] == "https://laadpas.anwb.nl/"
 
 
 async def test_client_refreshes_and_rotates(

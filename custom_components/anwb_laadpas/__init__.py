@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import timedelta
 import logging
 
@@ -43,6 +44,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: AnwbLaadpasConfigEntry) 
     except ApiError as err:
         _LOGGER.debug("Discovery failed, using stored auth config: %s", err)
     else:
+        if discovered.tenant_id is None and auth_config.tenant_id:
+            # Only used for the login page; keep the last known value.
+            discovered = replace(discovered, tenant_id=auth_config.tenant_id)
         if discovered != auth_config:
             _LOGGER.info("ANWB Laadpas auth configuration changed, updating entry")
             auth_config = discovered

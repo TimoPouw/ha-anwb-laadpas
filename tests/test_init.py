@@ -21,7 +21,7 @@ from custom_components.anwb_laadpas.const import (
     EVENT_NEW_SESSION,
 )
 
-from .conftest import CLIENT_ID, FakeDeftpower
+from .conftest import CLIENT_ID, TENANT_ID, FakeDeftpower
 
 
 def _listen(hass: HomeAssistant, events: list[Any]) -> None:
@@ -230,3 +230,14 @@ async def test_updated_session_replaces_known_one(
     data = mock_config_entry.runtime_data.data
     assert next(s for s in data.sessions if s.id == session_id).cost == 1.23
     assert events == []
+
+
+async def test_missing_tenant_keeps_stored_value(
+    hass: HomeAssistant, fake_api: FakeDeftpower, mock_config_entry: MockConfigEntry
+) -> None:
+    fake_api.client_id = "new-client-id"
+    fake_api.tenant_id = None
+    await _setup(hass, mock_config_entry)
+    auth = mock_config_entry.data[CONF_AUTH_CONFIG]
+    assert auth["client_id"] == "new-client-id"
+    assert auth["tenant_id"] == TENANT_ID

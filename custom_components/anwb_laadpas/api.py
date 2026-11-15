@@ -99,15 +99,19 @@ class PkceLogin:
         )
 
 
-def _origin_headers() -> dict[str, str]:
-    # The API resolves the ANWB tenant from the Origin of the web app.
-    return {"Origin": PORTAL_URL, "Accept": "application/json"}
+def _portal_headers() -> dict[str, str]:
+    # The API resolves the ANWB tenant from the Referer of the web app.
+    return {
+        "Origin": PORTAL_URL,
+        "Referer": f"{PORTAL_URL}/",
+        "Accept": "application/json",
+    }
 
 
 async def _get_json(session: aiohttp.ClientSession, url: str) -> Any:
     try:
         async with session.get(
-            url, headers=_origin_headers(), timeout=REQUEST_TIMEOUT
+            url, headers=_portal_headers(), timeout=REQUEST_TIMEOUT
         ) as resp:
             if resp.status != 200:
                 raise ApiError(f"GET {url} returned HTTP {resp.status}")

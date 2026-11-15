@@ -91,6 +91,7 @@ class FakeDeftpower:
         self.issued_codes: dict[str, str] = {}
         self.client_id = CLIENT_ID
         self.app_config_status = 200
+        self.tenant_id: str | None = TENANT_ID
 
         mocker.get(
             f"{PORTAL}/assets/appconfig.production.json", side_effect=self._app_config
@@ -101,7 +102,7 @@ class FakeDeftpower:
         )
         mocker.get(
             f"{API}/api/services/app/Account/GetIdentityTenantId",
-            json=abp(TENANT_ID),
+            side_effect=self._tenant,
         )
         mocker.post(f"{IDP}/connect/token", side_effect=self._token)
         mocker.get(
@@ -124,6 +125,9 @@ class FakeDeftpower:
             status=self.app_config_status,
             json={"remoteServiceBaseUrl": API, "accountBaseUrl": IDP},
         )
+
+    async def _tenant(self, method: str, url: Any, data: Any) -> Any:
+        return AiohttpClientMockResponse(method, url, json=abp(self.tenant_id))
 
     async def _providers(self, method: str, url: Any, data: Any) -> Any:
         return AiohttpClientMockResponse(
