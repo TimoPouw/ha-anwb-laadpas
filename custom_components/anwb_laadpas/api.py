@@ -22,14 +22,19 @@ import aiohttp
 
 from .const import (
     APP_CONFIG_PATH,
+    INVOICE_DOWNLOAD_PATH,
+    INVOICE_PAGE_SIZE,
+    INVOICES_PATH,
     OIDC_PROVIDER_NAME,
     PORTAL_URL,
     PROVIDERS_PATH,
     REDIRECT_PATH,
+    SESSION_DETAIL_PATH,
     SESSIONS_PATH,
+    TEMP_FILE_PATH,
     TENANT_PATH,
 )
-from .models import ChargingSession, SessionPage
+from .models import ChargingSession, Invoice, SessionDetails, SessionPage
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -318,13 +323,20 @@ class AnwbLaadpasClient:
             raise ApiError("Access token has no subject")
         return str(user_id)
 
-    async def _async_get(self, path: str, params: dict[str, Any]) -> Any:
+    async def _async_request(
+        self, method: str, path: str, params: dict[str, Any], *, raw: bool = False
+    ) -> Any:
+        """Call the API, refreshing the access token once on 401.
+
+        Returns the ABP 'result', or the response bytes when raw is True.
+        """
         url = f"{self._config.api_base}{path}"
         for attempt in range(2):
             token = await self._async_access_token(force_refresh=attempt > 0)
             headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
             try:
-                async with self._session.get(
+                async with self._session.request(
+                    method,
                     url,
                     params=params,
                     headers=headers,
@@ -333,27 +345,38 @@ class AnwbLaadpasClient:
                 ) as resp:
                     status = resp.status
                     location = resp.headers.get("Location", "")
-                    body = await resp.json(content_type=None) if status == 200 else None
+                    body: Any = None
+                    if status == 200:
+                        body = (
+                            await resp.read()
+                            if raw
+                            else await resp.json(content_type=None)
+                        )
             except (aiohttp.ClientError, TimeoutError, ValueError) as err:
-                raise ApiError(f"GET {path} failed: {err}") from err
+                raise ApiError(f"{method} {path} failed: {err}") from err
 
             # Without a valid token the API redirects to /Error?statusCode=401
             # instead of answering 401 itself.
             unauthorized = status in (401, 403) or (
                 300 <= status < 400 and "401" in location
             )
+            if status == 200 and raw:
+                return body
             if status == 200 and isinstance(body, dict):
                 if body.get("unAuthorizedRequest"):
                     unauthorized = True
                 elif not body.get("success", True):
                     message = (body.get("error") or {}).get("message")
-                    raise ApiError(f"GET {path} failed: {message}")
+                    raise ApiError(f"{method} {path} failed: {message}")
                 else:
                     return body.get("result")
             if not unauthorized:
-                raise ApiError(f"GET {path} returned HTTP {status}")
+                raise ApiError(f"{method} {path} returned HTTP {status}")
             _LOGGER.debug("Unauthorized on %s, refreshing token", path)
         raise AuthError("Unauthorized after refreshing the access token")
+
+    async def _async_get(self, path: str, params: dict[str, Any]) -> Any:
+        return await self._async_request("GET", path, params)
 
     async def async_get_sessions(self, offset: int = 0, limit: int = 50) -> SessionPage:
         """Fetch one page of completed sessions, newest first."""
@@ -380,3 +403,61 @@ class AnwbLaadpasClient:
             total_count=int(total) if total is not None else len(sessions),
             sessions=sessions,
         )
+
+    async def async_get_session_details(self, session_id: str) -> SessionDetails:
+        """Fetch the extra fields of one session."""
+        result = await self._async_get(SESSION_DETAIL_PATH, {"id": session_id})
+        if not isinstance(result, dict):
+            raise ApiError("Unexpected session detail response")
+        return SessionDetails.from_api(result)
+
+    async def async_get_invoices(self) -> list[Invoice]:
+        """Fetch all invoices."""
+        invoices: list[Invoice] = []
+        offset = 0
+        while True:
+            result = await self._async_get(
+                INVOICES_PATH,
+                {"SkipCount": offset, "MaxResultCount": INVOICE_PAGE_SIZE},
+            )
+            if not isinstance(result, dict):
+                raise ApiError("Unexpected invoices response")
+            items = result.get("items") or []
+            for item in items:
+                try:
+                    invoices.append(Invoice.from_api(item))
+                except (KeyError, TypeError, ValueError) as err:
+                    _LOGGER.warning(
+                        "Skipping invoice that could not be parsed: %s", err
+                    )
+            offset += INVOICE_PAGE_SIZE
+            if not items or offset >= int(result.get("totalCount") or 0):
+                return invoices
+
+    async def async_download_invoice(
+        self, invoice: Invoice, specification: bool = False
+    ) -> tuple[str, bytes]:
+        """Download the invoice or its specification as PDF.
+
+        Returns the file name suggested by the server and the content.
+        """
+        params: dict[str, Any] = {"id": invoice.id, "invoiceNumber": invoice.number}
+        if specification:
+            params["type"] = "specification"
+        meta = await self._async_request("POST", INVOICE_DOWNLOAD_PATH, params)
+        if not isinstance(meta, dict) or not meta.get("fileToken"):
+            raise ApiError("Unexpected download response")
+        content = await self._async_request(
+            "GET",
+            TEMP_FILE_PATH,
+            {
+                "fileType": meta.get("fileType", ""),
+                "fileToken": meta["fileToken"],
+                "fileName": meta.get("fileName", ""),
+            },
+            raw=True,
+        )
+        if not content.startswith(b"%PDF"):
+            raise ApiError("Downloaded file is not a PDF")
+        kind = "specification" if specification else "invoice"
+        return str(meta.get("fileName") or f"{kind}-{invoice.number}.pdf"), content
