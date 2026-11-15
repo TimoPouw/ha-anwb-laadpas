@@ -1,0 +1,22 @@
+# Secrets and real data: never commit
+.env
+.env.*
+tools/sample_response.json
+tools/probe_report.txt
+*.token
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
