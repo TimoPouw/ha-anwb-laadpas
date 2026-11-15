@@ -22,6 +22,11 @@ exposes them as sensors and events.
   automations.
 - **All sessions** in a dashboard (via a sensor attribute) and through the
   `anwb_laadpas.get_sessions` action.
+- **Session details**: price excluding VAT, operator, connector, GPS location,
+  vehicle and stop reason.
+- **Invoices**: last invoice, open amount and the full list, an
+  `anwb_laadpas_new_invoice` event, and invoice and specification PDFs saved to
+  your media folder (on request or automatically).
 - Browser login with MFA, automatic token refresh, reauthentication when the
   login expires, and diagnostics with personal data removed.
 
@@ -83,6 +88,8 @@ Under **Settings > Devices & services > ANWB Laadpas > Configure** you can set:
 
 - **Update interval**: how often to check for new sessions (default 30
   minutes).
+- **Download new invoices automatically**: saves the invoice and specification
+  of every new invoice as PDF (see [Invoices](#invoices)). Off by default.
 - **A name per card**: each field is labelled with the card number. The name is
   used for the card's device and in the `card_name` field of events. You can
   also rename devices in Home Assistant itself.
@@ -103,11 +110,23 @@ Account device (`ANWB Laadpas`):
 | Total energy | kWh | `total_increasing`, for the Energy dashboard |
 | Total cost | EUR | |
 | Sessions | | Number of sessions; attribute `sessions` holds the full list (see below) |
+| Last invoice | EUR | Including VAT. Attributes: number, date, due and paid date, amount excluding VAT, VAT rate, status, period, number of sessions |
+| Open amount | EUR | Total of invoices that are not paid yet |
+| Invoices | | Number of invoices; attribute `invoices` holds the full list |
 
 Each card device has: last session energy (with attributes), cost and end,
 sessions, energy and cost this month, and total energy.
 
 Sessions where the cost is not known yet count as 0 until the cost is filled in.
+
+### Session details
+
+Some fields come from a separate call per session: `cost_excl_vat`,
+`operator_name`, `connector_standard`, `connector_format`, `latitude`,
+`longitude`, `vehicle` and `stop_reason`. They are fetched straight away for
+new sessions. Older sessions are completed in the background, 20 per update,
+so the full history is complete after a few hours. Until then these fields are
+empty for older sessions.
 
 ## Viewing all sessions
 
@@ -165,6 +184,82 @@ sessions:
     city: Exampletown
 ```
 
+## Invoices
+
+The invoice sensors and actions only contain invoice data: your name, address
+and e-mail address on the invoice are never read into Home Assistant.
+
+### Getting invoices
+
+```yaml
+action: anwb_laadpas.get_invoices
+data:
+  start: "2026-01-01"   # invoice date on or after
+  end: "2026-12-31"     # invoice date on or before
+  unpaid_only: false
+  limit: 12
+```
+
+Returns `count`, `amount_incl_vat`, `open_amount` and `invoices`, where each
+invoice has `invoice_id`, `number`, `date`, `due_date`, `paid_date`,
+`amount_excl_vat`, `amount_incl_vat`, `vat_rate`, `currency`, `status`, `paid`,
+`type`, `period` and `session_count`.
+
+### Downloading PDFs
+
+```yaml
+action: anwb_laadpas.download_invoices
+data:
+  invoice: "1700000001"   # optional; leave out for all invoices or use start/end
+  kind: both              # invoice, specification or both
+  overwrite: false
+```
+
+Files are saved in the `anwb_laadpas` folder of your local media folder
+(usually `/media/anwb_laadpas`), named like
+`2026-10-31_1700000001_invoice.pdf` and
+`2026-10-31_1700000001_specification.pdf`. Open them via **Media > My media >
+anwb_laadpas**. Existing files are skipped unless `overwrite` is set. The
+action returns the paths of the files.
+
+With the option **Download new invoices automatically**, every new invoice and
+its specification are saved as soon as they appear.
+
+### Event: `anwb_laadpas_new_invoice`
+
+Fired once for every new invoice, with the same fields as `get_invoices` plus
+`files` (the saved PDFs, empty when automatic download is off). Not fired for
+invoices that already existed when you set up the integration.
+
+```yaml
+automation:
+  - alias: "New charging invoice"
+    triggers:
+      - trigger: event
+        event_type: anwb_laadpas_new_invoice
+    actions:
+      - action: notify.mobile_app_phone
+        data:
+          title: "New ANWB Laadpas invoice"
+          message: >-
+            € {{ trigger.event.data.amount_incl_vat }} for
+            {{ trigger.event.data.session_count }} sessions
+            ({{ trigger.event.data.period }})
+```
+
+### Invoices in a dashboard
+
+```yaml
+type: markdown
+title: Invoices
+content: |
+  | Date | Period | Sessions | € | Status |
+  |:--|:--|--:|--:|:--|
+  {% for i in state_attr('sensor.anwb_laadpas_invoices', 'invoices') or [] -%}
+  | {{ as_timestamp(i.date) | timestamp_custom('%d-%m-%Y') }} | {{ i.period }} | {{ i.session_count }} | {{ '%.2f' | format(i.amount_incl_vat) }} | {{ 'paid' if i.paid else i.status }} |
+  {% endfor %}
+```
+
 ## Event: `anwb_laadpas_new_session`
 
 Fired once for every new completed session, oldest first. Not fired for the
@@ -181,6 +276,8 @@ history that is loaded when you first set up the integration.
 | `card_id`, `card_name` | `100002`, `Tesla` |
 | `location_name`, `address`, `city`, `country` | |
 | `evse_id`, `operator` | |
+| `cost_excl_vat`, `operator_name`, `connector_standard`, `connector_format` | |
+| `latitude`, `longitude`, `vehicle`, `stop_reason` | |
 
 Example automation:
 
