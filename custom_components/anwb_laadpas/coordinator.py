@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 import logging
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -15,11 +16,12 @@ from homeassistant.util import dt as dt_util
 
 from .api import AnwbLaadpasClient, ApiError, AuthError
 from .const import (
+    BACKFILL_DELAY,
+    BACKFILL_SAVE_EVERY,
     CONF_AUTO_DOWNLOAD,
     CONF_CARD_NAMES,
     CONF_SCAN_INTERVAL,
     DEFAULT_SCAN_INTERVAL_MIN,
-    DETAILS_PER_UPDATE,
     DOMAIN,
     EVENT_NEW_INVOICE,
     EVENT_NEW_SESSION,
@@ -132,6 +134,7 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         self._invoices: list[Invoice] = []
         self._known_invoice_ids: set[str] = set()
         self._detail_attempts: dict[str, int] = {}
+        self._backfill_task: asyncio.Task[None] | None = None
         # True once the full history has been loaded; events fire after that.
         self._synced = False
 
@@ -191,12 +194,8 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
             ):
                 await self._async_new_invoice(invoice)
 
-        return LaadpasData(
-            sessions=sorted(
-                self._sessions.values(), key=lambda s: s.start, reverse=True
-            ),
-            invoices=list(self._invoices),
-        )
+        self._async_start_backfill()
+        return self._build_data()
 
     def _merge_sessions(self, fetched: list[ChargingSession]) -> list[ChargingSession]:
         """Add new sessions and apply later changes; return the new ones."""
@@ -213,34 +212,86 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         return new
 
     async def _async_fetch_details(self, new: list[ChargingSession]) -> None:
-        """Fetch details for new sessions, then a batch of older ones."""
-        new_ids = [s.id for s in new]
-        backlog = [
+        """Fetch details for new sessions, so their event includes them.
+
+        On the first sync every session is new; the background task fills those
+        in instead, so the setup is not held up.
+        """
+        if not self._synced:
+            return
+        for session in new:
+            await self._async_fetch_one_detail(session.id)
+
+    async def _async_fetch_one_detail(self, session_id: str) -> None:
+        """Fetch and store the details of one session.
+
+        After MAX_DETAIL_ATTEMPTS failures the session gets empty details, so
+        it is not retried forever. AuthError is raised to the caller.
+        """
+        try:
+            details = await self.client.async_get_session_details(session_id)
+        except ApiError as err:
+            attempts = self._detail_attempts.get(session_id, 0) + 1
+            self._detail_attempts[session_id] = attempts
+            _LOGGER.debug("Details of %s failed (%s): %s", session_id, attempts, err)
+            if attempts < MAX_DETAIL_ATTEMPTS:
+                return
+            details = EMPTY_DETAILS
+        if session := self._sessions.get(session_id):
+            self._sessions[session_id] = session.with_details(details)
+
+    @callback
+    def _async_start_backfill(self) -> None:
+        """Start filling in details of older sessions, if needed."""
+        if self._backfill_task and not self._backfill_task.done():
+            return
+        if not any(s.details is None for s in self._sessions.values()):
+            return
+        self._backfill_task = self.config_entry.async_create_background_task(
+            self.hass, self._async_backfill(), name=f"{DOMAIN} details backfill"
+        )
+
+    async def _async_backfill(self) -> None:
+        """Fetch missing details one by one, newest first, with a pause."""
+        pending = [
             s.id
             for s in sorted(
                 self._sessions.values(), key=lambda s: s.start, reverse=True
             )
-            if s.details is None and s.id not in new_ids
+            if s.details is None
         ]
-        # On the first sync everything is new: treat it all as backlog.
-        if not self._synced:
-            backlog, new_ids = new_ids + backlog, []
-        todo = new_ids + backlog[: max(0, DETAILS_PER_UPDATE - len(new_ids))]
-        for session_id in todo:
-            try:
-                details = await self.client.async_get_session_details(session_id)
-            except ApiError as err:
-                attempts = self._detail_attempts.get(session_id, 0) + 1
-                self._detail_attempts[session_id] = attempts
-                _LOGGER.debug(
-                    "Details of %s failed (%s): %s", session_id, attempts, err
-                )
-                if attempts < MAX_DETAIL_ATTEMPTS:
+        _LOGGER.debug("Filling in details of %s sessions", len(pending))
+        done = 0
+        try:
+            for session_id in pending:
+                session = self._sessions.get(session_id)
+                if session is None or session.details is not None:
                     continue
-                details = EMPTY_DETAILS
-            self._sessions[session_id] = self._sessions[session_id].with_details(
-                details
-            )
+                await self._async_fetch_one_detail(session_id)
+                done += 1
+                if done % BACKFILL_SAVE_EVERY == 0:
+                    await self._async_publish()
+                await asyncio.sleep(BACKFILL_DELAY)
+        except AuthError as err:
+            # The next regular update raises it again and starts reauth.
+            _LOGGER.debug("Stopped filling in details: %s", err)
+        finally:
+            if done:
+                await self._async_publish()
+
+    async def _async_publish(self) -> None:
+        """Save progress and show it, without moving the next update."""
+        await self._async_save()
+        self.data = self._build_data()
+        self.async_update_listeners()
+
+    def _build_data(self) -> LaadpasData:
+        return LaadpasData(
+            sessions=sorted(
+                self._sessions.values(), key=lambda s: s.start, reverse=True
+            ),
+            invoices=list(self._invoices),
+        )
 
     async def _async_fetch_invoices(self) -> list[Invoice]:
         """Refresh the invoices; return the ones not seen before."""

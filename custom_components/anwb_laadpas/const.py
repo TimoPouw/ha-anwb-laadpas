@@ -28,9 +28,10 @@ PAGE_SIZE: Final = 50
 MIN_PAGES_PER_UPDATE: Final = 2
 MAX_PAGES_PER_UPDATE: Final = 100
 INVOICE_PAGE_SIZE: Final = 100
-# Session details cost one call each: new sessions first, then this many
-# older ones per update until the history is complete.
-DETAILS_PER_UPDATE: Final = 20
+# Session details cost one call each. New sessions get them during the update;
+# older ones are filled in by a background task with a pause between calls.
+BACKFILL_DELAY: Final = 1.5  # seconds
+BACKFILL_SAVE_EVERY: Final = 25  # sessions
 
 CONF_REFRESH_TOKEN: Final = "refresh_token"
 CONF_AUTH_CONFIG: Final = "auth_config"
