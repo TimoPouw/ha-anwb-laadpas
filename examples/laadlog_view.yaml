@@ -1,0 +1,79 @@
+# Dashboard view for ANWB Laadpas sessions and invoices.
+#
+# Add it to a dashboard: open the dashboard, Edit > three dots > Raw
+# configuration editor, and paste this under `views:` (or ask an assistant
+# with Home Assistant MCP access to add it as a view).
+#
+# Entity ids: the ids below are the English defaults. Check yours under
+# Settings > Devices & services > ANWB Laadpas > ANWB Laadpas (device) and
+# replace them if they differ (with Home Assistant in Dutch they can be, for
+# example, sensor.anwb_laadpas_sessies).
+title: ANWB Laadpas
+path: anwb-laadpas
+icon: mdi:ev-station
+type: sections
+max_columns: 3
+sections:
+  - type: grid
+    cards:
+      - type: heading
+        heading: Deze maand
+      - type: tile
+        entity: sensor.anwb_laadpas_energy_this_month
+      - type: tile
+        entity: sensor.anwb_laadpas_cost_this_month
+      - type: tile
+        entity: sensor.anwb_laadpas_sessions_this_month
+      - type: tile
+        entity: sensor.anwb_laadpas_open_amount
+      - type: heading
+        heading: Laatste sessie
+      - type: tile
+        entity: sensor.anwb_laadpas_last_session_energy
+      - type: tile
+        entity: sensor.anwb_laadpas_last_session_cost
+      - type: tile
+        entity: sensor.anwb_laadpas_last_session_end
+      - type: tile
+        entity: sensor.anwb_laadpas_last_session_duration
+      - type: markdown
+        content: >-
+          {% set s = states.sensor.anwb_laadpas_last_session_energy %}
+          {% if s and s.attributes.location_name %}
+          **{{ s.attributes.location_name }}**, {{ s.attributes.city }}
+          {%- if s.attributes.operator_name %} ({{ s.attributes.operator_name }}){% endif %}
+          {%- if s.attributes.latitude %}
+          [Open in kaart](https://www.openstreetmap.org/?mlat={{ s.attributes.latitude }}&mlon={{ s.attributes.longitude }}#map=17/{{ s.attributes.latitude }}/{{ s.attributes.longitude }})
+          {%- endif %}
+          {% endif %}
+  - type: grid
+    column_span: 2
+    cards:
+      - type: heading
+        heading: Energie per maand
+      - type: statistics-graph
+        entities:
+          - sensor.anwb_laadpas_total_energy
+        chart_type: bar
+        period: month
+        days_to_show: 365
+        stat_types:
+          - change
+      - type: heading
+        heading: Sessies
+      - type: markdown
+        content: |
+          | Datum | Locatie | kWh | € | Pas |
+          |:--|:--|--:|--:|:--|
+          {% for s in (state_attr('sensor.anwb_laadpas_sessions', 'sessions') or [])[:50] -%}
+          | {{ as_timestamp(s.start) | timestamp_custom('%d-%m-%Y %H:%M') }} | {{ s.location_name }}, {{ s.city }} | {{ '%.2f' | format(s.energy_kwh) }} | {{ '%.2f' | format(s.cost) if s.cost is not none else '' }} | {{ s.card }} |
+          {% endfor %}
+      - type: heading
+        heading: Facturen
+      - type: markdown
+        content: |
+          | Datum | Periode | Sessies | € | Status |
+          |:--|:--|--:|--:|:--|
+          {% for i in state_attr('sensor.anwb_laadpas_invoices', 'invoices') or [] -%}
+          | {{ as_timestamp(i.date) | timestamp_custom('%d-%m-%Y') }} | {{ i.period | replace('Laadsessies - ', '') }} | {{ i.session_count }} | {{ '%.2f' | format(i.amount_incl_vat) }} | {{ 'betaald' if i.paid else i.status }} |
+          {% endfor %}

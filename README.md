@@ -132,6 +132,11 @@ it left off. Until then these fields are empty for older sessions.
 
 ## Viewing all sessions
 
+A complete dashboard view with this month's figures, the last session, a
+monthly energy graph and tables of sessions and invoices is in
+[`examples/laadlog_view.yaml`](examples/laadlog_view.yaml). Paste it under
+`views:` in the raw configuration editor of a dashboard.
+
 ### In a dashboard
 
 The **Sessions** sensor has an attribute `sessions` with every session, newest
