@@ -10,6 +10,10 @@ Two modes:
       repo root), refreshes it, fetches one page of completed charging sessions
       and writes the raw response to tools/sample_response.json.
 
+  python tools/probe.py login-start
+  python tools/probe.py login-finish '<redirect url>'
+      Same as 'login', split in two non-interactive steps.
+
   python tools/probe.py login
       Tests the "login via URL" flow: generates PKCE + state, prints the
       authorize URL, asks you to paste the URL you end up on after logging in
@@ -209,12 +213,14 @@ def do_refresh(refresh_token: str) -> str:
     return payload["access_token"]
 
 
-def do_login() -> str:
+PKCE_FILE = ROOT / "tools" / ".pkce.json"
+
+
+def login_start() -> str:
+    """Create PKCE + state, persist them and return the authorize URL."""
     status, _, body = http("GET", DISCOVERY_URL)
     discovery = json.loads(body) if status == 200 else {}
     authorize_url = discovery.get("authorization_endpoint", f"{IDP}/connect/authorize")
-    log(f"[login] authorize endpoint: {authorize_url}")
-    log(f"[login] PKCE methods: {discovery.get('code_challenge_methods_supported')}")
 
     verifier = secrets.token_urlsafe(64)
     challenge = (
@@ -235,26 +241,21 @@ def do_login() -> str:
         "acr_values": ACR_VALUES,
         "response_mode": "query",
     }
-    url = f"{authorize_url}?{urllib.parse.urlencode(params, quote_via=urllib.parse.quote)}"
+    PKCE_FILE.write_text(json.dumps({"verifier": verifier, "state": state}))
+    PKCE_FILE.chmod(0o600)
+    return f"{authorize_url}?{urllib.parse.urlencode(params, quote_via=urllib.parse.quote)}"
 
-    print()
-    print("1. Open this URL in a browser and log in (including MFA):")
-    print()
-    print(url)
-    print()
-    print("2. After login you land on laadpas.anwb.nl/account/login?code=...")
-    print("   Copy that full URL from the address bar as fast as possible.")
-    print("   If the page redirects away before you can copy it: open DevTools,")
-    print("   Network tab, enable 'Preserve log', repeat, and copy the URL of the")
-    print("   request to /account/login?code=... from there.")
-    print()
-    pasted = input("3. Paste the URL here: ").strip()
 
-    query = urllib.parse.parse_qs(urllib.parse.urlparse(pasted).query)
+def login_finish(pasted: str) -> str:
+    """Exchange the code from the pasted redirect URL for tokens."""
+    if not PKCE_FILE.exists():
+        sys.exit("Run 'login-start' first.")
+    saved = json.loads(PKCE_FILE.read_text())
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(pasted.strip()).query)
     if "error" in query:
         log(f"[login] IdP returned error: {query.get('error')} {query.get('error_description')}")
         sys.exit(1)
-    if query.get("state", [None])[0] != state:
+    if query.get("state", [None])[0] != saved["state"]:
         log("[login] state mismatch, aborting")
         sys.exit(1)
     code = query.get("code", [None])[0]
@@ -267,11 +268,12 @@ def do_login() -> str:
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": REDIRECT_URI,
-            "code_verifier": verifier,
+            "code_verifier": saved["verifier"],
             "client_id": CLIENT_ID,
         },
         "login",
     )
+    PKCE_FILE.unlink()
     log("[login] code exchange WORKS: login via URL is viable")
     if payload.get("refresh_token"):
         save_refresh_token(payload["refresh_token"])
@@ -279,6 +281,22 @@ def do_login() -> str:
     else:
         log("[login] WARNING: no refresh token returned (offline_access missing?)")
     return payload["access_token"]
+
+
+def do_login() -> str:
+    url = login_start()
+    print()
+    print("1. Open this URL in a browser and log in (including MFA):")
+    print()
+    print(url)
+    print()
+    print("2. After login you land on laadpas.anwb.nl/account/login?code=...")
+    print("   Copy that full URL from the address bar as fast as possible.")
+    print("   If the page redirects away before you can copy it: open DevTools,")
+    print("   Network tab, enable 'Preserve log', repeat, and copy the URL of the")
+    print("   request to /account/login?code=... from there.")
+    print()
+    return login_finish(input("3. Paste the URL here: "))
 
 
 # --------------------------------------------------------------------------- #
@@ -346,6 +364,13 @@ def main() -> None:
     mode = sys.argv[1] if len(sys.argv) > 1 else "refresh"
     if mode == "login":
         access_token = do_login()
+    elif mode == "login-start":
+        print(login_start())
+        return
+    elif mode == "login-finish":
+        if len(sys.argv) < 3:
+            sys.exit("Usage: probe.py login-finish '<redirect url>'")
+        access_token = login_finish(sys.argv[2])
     elif mode == "refresh":
         token = os.environ.get("ANWB_REFRESH_TOKEN") or load_env().get("ANWB_REFRESH_TOKEN")
         if not token:

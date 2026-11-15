@@ -3,6 +3,7 @@
 .env.*
 tools/sample_response.json
 tools/probe_report.txt
+tools/.pkce.json
 *.token
 
 # Python
