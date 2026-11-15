@@ -1,0 +1,74 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Koppel je ANWB Laadpas",
+        "description": "Kies hoe je wilt inloggen.",
+        "menu_options": {
+          "login": "Inloggen via de browser (aanbevolen)",
+          "token": "Refresh token plakken"
+        }
+      },
+      "login": {
+        "title": "Inloggen via de browser",
+        "description": "1. Open [deze inlogpagina]({authorize_url}) en log in met je ANWB Laadpas-account, inclusief de verificatiecode.\n2. Je komt uit op een pagina van laadpas.anwb.nl. Kopieer meteen het volledige adres uit de adresbalk; daar staat `?code=...` in en het is maar een paar minuten geldig.\n3. Plak het hieronder.\n\nSpringt de pagina door voordat je het adres kunt kopiëren? Open de ontwikkelaarstools (F12), tabblad Netwerk, zet 'Logboek behouden' aan, log opnieuw in en kopieer de URL van het verzoek naar `/account/login?code=...`.",
+        "data": {
+          "redirect_url": "Adres na het inloggen"
+        },
+        "data_description": {
+          "redirect_url": "Het volledige adres, beginnend met laadpas.anwb.nl/account/login?code="
+        }
+      },
+      "token": {
+        "title": "Refresh token plakken",
+        "description": "Log in op laadpas.anwb.nl met de ontwikkelaarstools (F12) open. Zoek in het tabblad Netwerk het verzoek naar `connect/token` en kopieer `refresh_token` uit het antwoord.\n\nLet op: een refresh token werkt maar één keer. Nadat Home Assistant hem gebruikt, moet je in je browser misschien opnieuw inloggen.",
+        "data": {
+          "refresh_token": "Refresh token"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw inloggen",
+        "description": "Je ANWB Laadpas-login is verlopen of ingetrokken. Log opnieuw in om je laadsessies te blijven ontvangen."
+      }
+    },
+    "error": {
+      "invalid_redirect_url": "Dit adres bevat geen geldige inlogcode voor deze poging. Kopieer het volledige adres nadat je bent ingelogd via de link die hier staat.",
+      "invalid_code": "De inlogcode is al gebruikt of verlopen. Open de nieuwe inloglink en probeer het opnieuw.",
+      "invalid_auth": "De token werd niet geaccepteerd. Kopieer een nieuwe en probeer het opnieuw.",
+      "cannot_connect": "Kan geen verbinding maken met de ANWB Laadpas-dienst."
+    },
+    "abort": {
+      "already_configured": "Dit account is al ingesteld.",
+      "cannot_connect": "Kan geen verbinding maken met de ANWB Laadpas-dienst.",
+      "invalid_auth": "Inloggen is gelukt, maar je laadsessies konden niet worden gelezen.",
+      "no_refresh_token": "Het inloggen gaf geen refresh token terug.",
+      "reauth_successful": "Je bent opnieuw ingelogd.",
+      "wrong_account": "Je bent ingelogd met een ander account dan het account dat is ingesteld."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opties voor ANWB Laadpas",
+        "description": "Stel in hoe vaak er op nieuwe sessies wordt gecontroleerd. Je kunt ook elk van je {card_count} laadpassen een naam geven; de velden hebben het pasnummer als label. Laat een veld leeg om het pasnummer te gebruiken.",
+        "data": {
+          "scan_interval": "Update-interval"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_session_energy": { "name": "Energie laatste sessie" },
+      "last_session_cost": { "name": "Kosten laatste sessie" },
+      "last_session_start": { "name": "Start laatste sessie" },
+      "last_session_end": { "name": "Einde laatste sessie" },
+      "last_session_duration": { "name": "Duur laatste sessie" },
+      "month_sessions": { "name": "Sessies deze maand" },
+      "month_energy": { "name": "Energie deze maand" },
+      "month_cost": { "name": "Kosten deze maand" },
+      "total_energy": { "name": "Totale energie" },
+      "total_cost": { "name": "Totale kosten" }
+    }
+  }
+}

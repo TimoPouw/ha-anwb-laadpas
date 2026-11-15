@@ -1,0 +1,74 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect your ANWB Laadpas",
+        "description": "Choose how you want to sign in.",
+        "menu_options": {
+          "login": "Log in via the browser (recommended)",
+          "token": "Paste a refresh token"
+        }
+      },
+      "login": {
+        "title": "Log in via the browser",
+        "description": "1. Open [this login page]({authorize_url}) and log in with your ANWB Laadpas account, including the verification code.\n2. You end up on a laadpas.anwb.nl page. Copy the full address from the address bar right away; it contains `?code=...` and is only valid for a few minutes.\n3. Paste it below.\n\nIf the page moves on before you can copy the address: open the developer tools (F12), Network tab, enable 'Preserve log', log in again and copy the URL of the request to `/account/login?code=...`.",
+        "data": {
+          "redirect_url": "Address after login"
+        },
+        "data_description": {
+          "redirect_url": "The full address, starting with laadpas.anwb.nl/account/login?code="
+        }
+      },
+      "token": {
+        "title": "Paste a refresh token",
+        "description": "Log in on laadpas.anwb.nl with the developer tools (F12) open. In the Network tab, find the request to `connect/token` and copy `refresh_token` from its response.\n\nNote: refresh tokens are single use. After Home Assistant uses it, your browser session may ask you to log in again.",
+        "data": {
+          "refresh_token": "Refresh token"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "The ANWB Laadpas login has expired or was revoked. Log in again to continue receiving charging sessions."
+      }
+    },
+    "error": {
+      "invalid_redirect_url": "This address does not contain a valid login code for this attempt. Copy the full address after logging in with the link shown here.",
+      "invalid_code": "The login code was already used or has expired. Open the new login link and try again.",
+      "invalid_auth": "The token was not accepted. Copy a fresh one and try again.",
+      "cannot_connect": "Could not connect to the ANWB Laadpas service."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "cannot_connect": "Could not connect to the ANWB Laadpas service.",
+      "invalid_auth": "Login succeeded, but the charging sessions could not be read.",
+      "no_refresh_token": "The login did not return a refresh token.",
+      "reauth_successful": "Logged in again successfully.",
+      "wrong_account": "You logged in with a different account than the one configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ANWB Laadpas options",
+        "description": "Set how often to check for new sessions. You can also give each of your {card_count} charging cards a name; the fields are labelled with the card number. Leave a field empty to use the card number.",
+        "data": {
+          "scan_interval": "Update interval"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_session_energy": { "name": "Last session energy" },
+      "last_session_cost": { "name": "Last session cost" },
+      "last_session_start": { "name": "Last session start" },
+      "last_session_end": { "name": "Last session end" },
+      "last_session_duration": { "name": "Last session duration" },
+      "month_sessions": { "name": "Sessions this month" },
+      "month_energy": { "name": "Energy this month" },
+      "month_cost": { "name": "Cost this month" },
+      "total_energy": { "name": "Total energy" },
+      "total_cost": { "name": "Total cost" }
+    }
+  }
+}
