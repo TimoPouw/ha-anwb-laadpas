@@ -15,22 +15,29 @@ from homeassistant.util import dt as dt_util
 
 from .api import AnwbLaadpasClient, ApiError, AuthError
 from .const import (
+    CONF_AUTO_DOWNLOAD,
     CONF_CARD_NAMES,
     CONF_SCAN_INTERVAL,
     DEFAULT_SCAN_INTERVAL_MIN,
+    DETAILS_PER_UPDATE,
     DOMAIN,
+    EVENT_NEW_INVOICE,
     EVENT_NEW_SESSION,
     MAX_PAGES_PER_UPDATE,
     MIN_PAGES_PER_UPDATE,
     PAGE_SIZE,
     STORAGE_VERSION,
 )
-from .models import ChargingSession
+from .invoices import async_save_invoice
+from .models import EMPTY_DETAILS, ChargingSession, Invoice
 
 if TYPE_CHECKING:
     from . import AnwbLaadpasConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
+
+# Give up on the details of a session after this many failed attempts.
+MAX_DETAIL_ATTEMPTS = 3
 
 
 @dataclass(slots=True)
@@ -38,6 +45,7 @@ class LaadpasData:
     """All known sessions plus derived figures, used by the sensors."""
 
     sessions: list[ChargingSession] = field(default_factory=list)
+    invoices: list[Invoice] = field(default_factory=list)
 
     def for_card(self, card_id: str | None) -> list[ChargingSession]:
         """Return the sessions of one card, or all sessions for None."""
@@ -72,6 +80,23 @@ class LaadpasData:
         """Return the total costs including VAT."""
         return round(sum(s.cost or 0.0 for s in self.for_card(card_id)), 2)
 
+    @property
+    def last_invoice(self) -> Invoice | None:
+        """Return the most recent invoice."""
+        return self.invoices[0] if self.invoices else None
+
+    @property
+    def open_amount(self) -> float:
+        """Return the total of invoices that are not paid yet."""
+        return round(
+            sum(i.amount_incl_vat or 0.0 for i in self.invoices if not i.is_paid), 2
+        )
+
+    @property
+    def details_pending(self) -> int:
+        """Return how many sessions still wait for their details."""
+        return sum(1 for s in self.sessions if s.details is None)
+
 
 def month_start() -> datetime:
     """Return the start of the current month in the local time zone."""
@@ -104,6 +129,9 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
             hass, STORAGE_VERSION, f"{DOMAIN}.{entry.entry_id}"
         )
         self._sessions: dict[str, ChargingSession] = {}
+        self._invoices: list[Invoice] = []
+        self._known_invoice_ids: set[str] = set()
+        self._detail_attempts: dict[str, int] = {}
         # True once the full history has been loaded; events fire after that.
         self._synced = False
 
@@ -111,6 +139,7 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         """Load the sessions we already know from storage."""
         stored = await self._store.async_load() or {}
         self._synced = bool(stored.get("synced"))
+        self._known_invoice_ids = set(stored.get("invoice_ids", []))
         for raw in stored.get("sessions", []):
             try:
                 session = ChargingSession.from_storage(raw)
@@ -128,36 +157,28 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         first_sync = not self._synced
         try:
             fetched = await self._async_fetch_recent(first_sync)
+            new = self._merge_sessions(fetched)
+            await self._async_fetch_details(new)
+            new_invoices = await self._async_fetch_invoices()
         except AuthError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except ApiError as err:
             raise UpdateFailed(str(err)) from err
 
-        new: list[ChargingSession] = []
-        changed = False
-        for session in fetched:
-            known = self._sessions.get(session.id)
-            if known is None:
-                new.append(session)
-            if known != session:
-                # New, or updated afterwards (for example costs filled in later).
-                self._sessions[session.id] = session
-                changed = True
-
-        if changed or first_sync:
-            self._synced = True
-            await self._store.async_save(
-                {
-                    "synced": True,
-                    "sessions": [s.as_storage() for s in self._sessions.values()],
-                }
-            )
+        self._synced = True
+        await self._async_save()
 
         if first_sync:
-            _LOGGER.debug("Initial sync loaded %s sessions", len(new))
+            _LOGGER.debug(
+                "Initial sync loaded %s sessions and %s invoices",
+                len(new),
+                len(self._invoices),
+            )
         else:
             # Fire events oldest first, so automations see them in order.
-            for session in sorted(new, key=lambda s: s.start):
+            for listed in sorted(new, key=lambda s: s.start):
+                # Use the stored version: it has the details fetched above.
+                session = self._sessions[listed.id]
                 self.hass.bus.async_fire(
                     EVENT_NEW_SESSION,
                     {
@@ -165,11 +186,107 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
                         **session.as_event_data(self.card_name(session.card_id)),
                     },
                 )
+            for invoice in sorted(
+                new_invoices, key=lambda i: i.date or dt_util.utcnow()
+            ):
+                await self._async_new_invoice(invoice)
 
         return LaadpasData(
             sessions=sorted(
                 self._sessions.values(), key=lambda s: s.start, reverse=True
+            ),
+            invoices=list(self._invoices),
+        )
+
+    def _merge_sessions(self, fetched: list[ChargingSession]) -> list[ChargingSession]:
+        """Add new sessions and apply later changes; return the new ones."""
+        new: list[ChargingSession] = []
+        for listed in fetched:
+            known = self._sessions.get(listed.id)
+            if known is None:
+                new.append(listed)
+                self._sessions[listed.id] = listed
+            else:
+                # Apply later changes (for example costs filled in afterwards),
+                # keeping the details we already fetched: the list has none.
+                self._sessions[listed.id] = listed.with_details(known.details)
+        return new
+
+    async def _async_fetch_details(self, new: list[ChargingSession]) -> None:
+        """Fetch details for new sessions, then a batch of older ones."""
+        new_ids = [s.id for s in new]
+        backlog = [
+            s.id
+            for s in sorted(
+                self._sessions.values(), key=lambda s: s.start, reverse=True
             )
+            if s.details is None and s.id not in new_ids
+        ]
+        # On the first sync everything is new: treat it all as backlog.
+        if not self._synced:
+            backlog, new_ids = new_ids + backlog, []
+        todo = new_ids + backlog[: max(0, DETAILS_PER_UPDATE - len(new_ids))]
+        for session_id in todo:
+            try:
+                details = await self.client.async_get_session_details(session_id)
+            except ApiError as err:
+                attempts = self._detail_attempts.get(session_id, 0) + 1
+                self._detail_attempts[session_id] = attempts
+                _LOGGER.debug(
+                    "Details of %s failed (%s): %s", session_id, attempts, err
+                )
+                if attempts < MAX_DETAIL_ATTEMPTS:
+                    continue
+                details = EMPTY_DETAILS
+            self._sessions[session_id] = self._sessions[session_id].with_details(
+                details
+            )
+
+    async def _async_fetch_invoices(self) -> list[Invoice]:
+        """Refresh the invoices; return the ones not seen before."""
+        try:
+            invoices = await self.client.async_get_invoices()
+        except AuthError:
+            raise
+        except ApiError as err:
+            # Invoices are secondary: keep the last known list.
+            _LOGGER.warning("Could not fetch invoices: %s", err)
+            return []
+        self._invoices = sorted(
+            invoices,
+            key=lambda i: i.date or datetime.min.replace(tzinfo=dt_util.UTC),
+            reverse=True,
+        )
+        new = [i for i in self._invoices if i.id not in self._known_invoice_ids]
+        self._known_invoice_ids.update(i.id for i in self._invoices)
+        return new
+
+    async def _async_new_invoice(self, invoice: Invoice) -> None:
+        """Download a new invoice if enabled and fire the event."""
+        files: list[str] = []
+        if self.config_entry.options.get(CONF_AUTO_DOWNLOAD) and invoice.has_pdf:
+            try:
+                files = await async_save_invoice(self.hass, self.client, invoice)
+            except ApiError as err:
+                _LOGGER.warning(
+                    "Could not download invoice %s: %s", invoice.number, err
+                )
+        self.hass.bus.async_fire(
+            EVENT_NEW_INVOICE,
+            {
+                "config_entry_id": self.config_entry.entry_id,
+                **invoice.as_row(),
+                "files": files,
+            },
+        )
+
+    async def _async_save(self) -> None:
+        await self._store.async_save(
+            {
+                "synced": True,
+                "invoice_ids": sorted(self._known_invoice_ids),
+                "sessions": [s.as_storage() for s in self._sessions.values()],
+            }
         )
 
     async def _async_fetch_recent(self, full: bool) -> list[ChargingSession]:

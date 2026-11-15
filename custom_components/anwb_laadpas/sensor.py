@@ -53,6 +53,7 @@ class LaadpasSensorDescription(SensorEntityDescription):
     value_fn: Callable[[LaadpasData, str | None], Any]
     with_session_attributes: bool = False
     with_session_list: bool = False
+    attributes_fn: Callable[[LaadpasData], dict[str, Any] | None] | None = None
     last_reset_fn: Callable[[], datetime] | None = None
 
 
@@ -159,6 +160,35 @@ SESSIONS = LaadpasSensorDescription(
     with_session_list=True,
 )
 
+LAST_INVOICE = LaadpasSensorDescription(
+    key="last_invoice",
+    translation_key="last_invoice",
+    device_class=SensorDeviceClass.MONETARY,
+    native_unit_of_measurement=CURRENCY,
+    suggested_display_precision=2,
+    value_fn=lambda data, card: (
+        data.last_invoice.amount_incl_vat if data.last_invoice else None
+    ),
+    attributes_fn=lambda data: (
+        data.last_invoice.as_row() if data.last_invoice else None
+    ),
+)
+OPEN_AMOUNT = LaadpasSensorDescription(
+    key="open_amount",
+    translation_key="open_amount",
+    device_class=SensorDeviceClass.MONETARY,
+    native_unit_of_measurement=CURRENCY,
+    suggested_display_precision=2,
+    value_fn=lambda data, card: data.open_amount,
+)
+INVOICES = LaadpasSensorDescription(
+    key="invoices",
+    translation_key="invoices",
+    state_class=SensorStateClass.TOTAL_INCREASING,
+    value_fn=lambda data, card: len(data.invoices),
+    attributes_fn=lambda data: {"invoices": [i.as_row() for i in data.invoices]},
+)
+
 ACCOUNT_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     LAST_SESSION_ENERGY,
     LAST_SESSION_COST,
@@ -171,6 +201,9 @@ ACCOUNT_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     TOTAL_ENERGY,
     TOTAL_COST,
     SESSIONS,
+    LAST_INVOICE,
+    OPEN_AMOUNT,
+    INVOICES,
 )
 CARD_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     LAST_SESSION_ENERGY,
@@ -220,8 +253,8 @@ class LaadpasSensor(AnwbLaadpasEntity, SensorEntity):
     """A sensor for the account or one charging card."""
 
     entity_description: LaadpasSensorDescription
-    # The full session list is for dashboards only; keep it out of the database.
-    _unrecorded_attributes = frozenset({"sessions"})
+    # Full lists are for dashboards only; keep them out of the database.
+    _unrecorded_attributes = frozenset({"sessions", "invoices"})
 
     def __init__(
         self,
@@ -248,6 +281,8 @@ class LaadpasSensor(AnwbLaadpasEntity, SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         """Return details of the last session on the energy sensor."""
+        if self.entity_description.attributes_fn is not None:
+            return self.entity_description.attributes_fn(self.coordinator.data)
         if self.entity_description.with_session_list:
             return {
                 "sessions": [
