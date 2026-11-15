@@ -23,7 +23,7 @@ exposes them as sensors and events.
 - **All sessions** in a dashboard (via a sensor attribute) and through the
   `anwb_laadpas.get_sessions` action.
 - **Session details**: price excluding VAT, operator, connector, GPS location,
-  vehicle and stop reason.
+  vehicle and stop reason, filled in for your whole history within minutes.
 - **Invoices**: last invoice, open amount and the full list, an
   `anwb_laadpas_new_invoice` event, and invoice and specification PDFs saved to
   your media folder (on request or automatically).
@@ -124,9 +124,11 @@ Sessions where the cost is not known yet count as 0 until the cost is filled in.
 Some fields come from a separate call per session: `cost_excl_vat`,
 `operator_name`, `connector_standard`, `connector_format`, `latitude`,
 `longitude`, `vehicle` and `stop_reason`. They are fetched straight away for
-new sessions. Older sessions are completed in the background, 20 per update,
-so the full history is complete after a few hours. Until then these fields are
-empty for older sessions.
+new sessions. After setup, a background task fills them in for your history,
+newest first, with a short pause between calls (about 2 seconds per session,
+so roughly 8 to 10 minutes for 250 sessions). It does not delay the setup or
+the regular updates, and its progress is saved, so a restart continues where
+it left off. Until then these fields are empty for older sessions.
 
 ## Viewing all sessions
 
