@@ -23,3 +23,59 @@ get_sessions:
           min: 1
           max: 10000
           mode: box
+get_invoices:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: anwb_laadpas
+    start:
+      example: "2026-01-01"
+      selector:
+        date:
+    end:
+      example: "2026-12-31"
+      selector:
+        date:
+    unpaid_only:
+      default: false
+      selector:
+        boolean:
+    limit:
+      example: 12
+      selector:
+        number:
+          min: 1
+          max: 1000
+          mode: box
+download_invoices:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: anwb_laadpas
+    invoice:
+      example: "1700000001"
+      selector:
+        text:
+    start:
+      example: "2026-01-01"
+      selector:
+        date:
+    end:
+      example: "2026-12-31"
+      selector:
+        date:
+    kind:
+      default: both
+      selector:
+        select:
+          translation_key: invoice_kind
+          options:
+            - both
+            - invoice
+            - specification
+    overwrite:
+      default: false
+      selector:
+        boolean:

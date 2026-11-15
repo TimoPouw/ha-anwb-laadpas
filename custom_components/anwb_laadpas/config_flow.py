@@ -10,6 +10,7 @@ from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFl
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
@@ -34,6 +35,7 @@ from .api import (
 )
 from .const import (
     CONF_AUTH_CONFIG,
+    CONF_AUTO_DOWNLOAD,
     CONF_CARD_NAMES,
     CONF_REFRESH_TOKEN,
     CONF_SCAN_INTERVAL,
@@ -231,6 +233,7 @@ class AnwbLaadpasOptionsFlow(OptionsFlow):
             return self.async_create_entry(
                 data={
                     CONF_SCAN_INTERVAL: int(user_input[CONF_SCAN_INTERVAL]),
+                    CONF_AUTO_DOWNLOAD: bool(user_input.get(CONF_AUTO_DOWNLOAD, False)),
                     CONF_CARD_NAMES: card_names,
                 }
             )
@@ -250,6 +253,10 @@ class AnwbLaadpasOptionsFlow(OptionsFlow):
                     mode=NumberSelectorMode.BOX,
                 )
             ),
+            vol.Required(
+                CONF_AUTO_DOWNLOAD,
+                default=entry.options.get(CONF_AUTO_DOWNLOAD, False),
+            ): BooleanSelector(),
         }
         for field, card_id in field_to_card.items():
             current = names.get(card_id)

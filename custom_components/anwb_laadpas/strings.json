@@ -52,7 +52,11 @@
         "title": "ANWB Laadpas options",
         "description": "Set how often to check for new sessions. You can also give each of your {card_count} charging cards a name; the fields are labelled with the card number. Leave a field empty to use the card number.",
         "data": {
-          "scan_interval": "Update interval"
+          "scan_interval": "Update interval",
+          "auto_download_invoices": "Download new invoices automatically"
+        },
+        "data_description": {
+          "auto_download_invoices": "Save the invoice and specification of every new invoice as PDF in the media folder (Media > My media > anwb_laadpas)."
         }
       }
     }
@@ -91,6 +95,15 @@
       },
       "sessions": {
         "name": "Sessions"
+      },
+      "last_invoice": {
+        "name": "Last invoice"
+      },
+      "open_amount": {
+        "name": "Open amount"
+      },
+      "invoices": {
+        "name": "Invoices"
       }
     }
   },
@@ -120,11 +133,85 @@
           "description": "Return at most this many sessions."
         }
       }
+    },
+    "get_invoices": {
+      "name": "Get invoices",
+      "description": "Returns invoices, newest first, with totals. Personal data such as your address is left out.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "The ANWB Laadpas account. Leave empty for all accounts."
+        },
+        "start": {
+          "name": "From",
+          "description": "Only invoices dated on or after this date."
+        },
+        "end": {
+          "name": "Until",
+          "description": "Only invoices dated on or before this date."
+        },
+        "unpaid_only": {
+          "name": "Unpaid only",
+          "description": "Only invoices that are not paid yet."
+        },
+        "limit": {
+          "name": "Maximum",
+          "description": "Return at most this many invoices."
+        }
+      }
+    },
+    "download_invoices": {
+      "name": "Download invoices",
+      "description": "Saves invoices and/or specifications as PDF in the media folder (Media > My media > anwb_laadpas). Existing files are skipped unless you choose to overwrite.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "The ANWB Laadpas account. Leave empty for all accounts."
+        },
+        "invoice": {
+          "name": "Invoice number",
+          "description": "Download only this invoice. Leave empty to use the period, or to download all invoices."
+        },
+        "start": {
+          "name": "From",
+          "description": "Only invoices dated on or after this date."
+        },
+        "end": {
+          "name": "Until",
+          "description": "Only invoices dated on or before this date."
+        },
+        "kind": {
+          "name": "What to download",
+          "description": "The invoice, the specification with all sessions, or both."
+        },
+        "overwrite": {
+          "name": "Overwrite",
+          "description": "Download again even if the file already exists."
+        }
+      }
     }
   },
   "exceptions": {
     "entry_not_loaded": {
       "message": "No loaded ANWB Laadpas account found."
+    },
+    "invoice_not_found": {
+      "message": "Invoice {invoice} was not found."
+    },
+    "download_failed": {
+      "message": "Downloading invoice {invoice} failed."
+    },
+    "auth_failed": {
+      "message": "The ANWB Laadpas login has expired. Log in again via the integration."
+    }
+  },
+  "selector": {
+    "invoice_kind": {
+      "options": {
+        "both": "Invoice and specification",
+        "invoice": "Invoice",
+        "specification": "Specification"
+      }
     }
   }
 }

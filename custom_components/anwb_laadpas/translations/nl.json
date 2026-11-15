@@ -52,7 +52,11 @@
         "title": "Opties voor ANWB Laadpas",
         "description": "Stel in hoe vaak er op nieuwe sessies wordt gecontroleerd. Je kunt ook elk van je {card_count} laadpassen een naam geven; de velden hebben het pasnummer als label. Laat een veld leeg om het pasnummer te gebruiken.",
         "data": {
-          "scan_interval": "Update-interval"
+          "scan_interval": "Update-interval",
+          "auto_download_invoices": "Nieuwe facturen automatisch downloaden"
+        },
+        "data_description": {
+          "auto_download_invoices": "Sla de factuur en specificatie van elke nieuwe factuur als PDF op in de mediamap (Media > Mijn media > anwb_laadpas)."
         }
       }
     }
@@ -91,6 +95,15 @@
       },
       "sessions": {
         "name": "Sessies"
+      },
+      "last_invoice": {
+        "name": "Laatste factuur"
+      },
+      "open_amount": {
+        "name": "Openstaand bedrag"
+      },
+      "invoices": {
+        "name": "Facturen"
       }
     }
   },
@@ -120,11 +133,85 @@
           "description": "Geef maximaal dit aantal sessies terug."
         }
       }
+    },
+    "get_invoices": {
+      "name": "Facturen ophalen",
+      "description": "Geeft je facturen terug, nieuwste eerst, met totalen. Persoonsgegevens zoals je adres worden weggelaten.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Het ANWB Laadpas-account. Laat leeg voor alle accounts."
+        },
+        "start": {
+          "name": "Vanaf",
+          "description": "Alleen facturen met een factuurdatum op of na deze datum."
+        },
+        "end": {
+          "name": "Tot en met",
+          "description": "Alleen facturen met een factuurdatum op of voor deze datum."
+        },
+        "unpaid_only": {
+          "name": "Alleen onbetaald",
+          "description": "Alleen facturen die nog niet zijn betaald."
+        },
+        "limit": {
+          "name": "Maximum",
+          "description": "Geef maximaal dit aantal facturen terug."
+        }
+      }
+    },
+    "download_invoices": {
+      "name": "Facturen downloaden",
+      "description": "Slaat facturen en/of specificaties als PDF op in de mediamap (Media > Mijn media > anwb_laadpas). Bestaande bestanden worden overgeslagen, tenzij je kiest voor overschrijven.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Het ANWB Laadpas-account. Laat leeg voor alle accounts."
+        },
+        "invoice": {
+          "name": "Factuurnummer",
+          "description": "Download alleen deze factuur. Laat leeg om de periode te gebruiken of om alle facturen te downloaden."
+        },
+        "start": {
+          "name": "Vanaf",
+          "description": "Alleen facturen met een factuurdatum op of na deze datum."
+        },
+        "end": {
+          "name": "Tot en met",
+          "description": "Alleen facturen met een factuurdatum op of voor deze datum."
+        },
+        "kind": {
+          "name": "Wat downloaden",
+          "description": "De factuur, de specificatie met alle sessies, of allebei."
+        },
+        "overwrite": {
+          "name": "Overschrijven",
+          "description": "Opnieuw downloaden, ook als het bestand al bestaat."
+        }
+      }
     }
   },
   "exceptions": {
     "entry_not_loaded": {
       "message": "Geen geladen ANWB Laadpas-account gevonden."
+    },
+    "invoice_not_found": {
+      "message": "Factuur {invoice} is niet gevonden."
+    },
+    "download_failed": {
+      "message": "Het downloaden van factuur {invoice} is mislukt."
+    },
+    "auth_failed": {
+      "message": "Je ANWB Laadpas-login is verlopen. Log opnieuw in via de integratie."
+    }
+  },
+  "selector": {
+    "invoice_kind": {
+      "options": {
+        "both": "Factuur en specificatie",
+        "invoice": "Factuur",
+        "specification": "Specificatie"
+      }
     }
   }
 }

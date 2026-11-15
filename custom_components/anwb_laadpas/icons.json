@@ -1,13 +1,38 @@
 {
   "entity": {
     "sensor": {
-      "sessions": { "default": "mdi:ev-station" },
-      "month_sessions": { "default": "mdi:calendar-month" },
-      "last_session_start": { "default": "mdi:clock-start" },
-      "last_session_end": { "default": "mdi:clock-end" }
+      "sessions": {
+        "default": "mdi:ev-station"
+      },
+      "month_sessions": {
+        "default": "mdi:calendar-month"
+      },
+      "last_session_start": {
+        "default": "mdi:clock-start"
+      },
+      "last_session_end": {
+        "default": "mdi:clock-end"
+      },
+      "last_invoice": {
+        "default": "mdi:file-document-outline"
+      },
+      "open_amount": {
+        "default": "mdi:cash-clock"
+      },
+      "invoices": {
+        "default": "mdi:file-document-multiple-outline"
+      }
     }
   },
   "services": {
-    "get_sessions": { "service": "mdi:format-list-bulleted" }
+    "get_sessions": {
+      "service": "mdi:format-list-bulleted"
+    },
+    "get_invoices": {
+      "service": "mdi:file-document-multiple-outline"
+    },
+    "download_invoices": {
+      "service": "mdi:file-download-outline"
+    }
   }
 }

@@ -24,6 +24,12 @@ TO_REDACT = {
     "postal_code",
     "evse_id",
     "session_id",
+    "latitude",
+    "longitude",
+    "vehicle",
+    "invoice_id",
+    "number",
+    "files",
 }
 
 
@@ -52,8 +58,14 @@ async def async_get_config_entry_diagnostics(
             "sessions_without_end": sum(1 for s in data.sessions if s.end is None)
             if data
             else 0,
+            "sessions_without_details": data.details_pending if data else 0,
             "last_session": async_redact_data(last.as_event_data(None), TO_REDACT)
             if last
+            else None,
+            "invoice_count": len(data.invoices) if data else 0,
+            "open_amount": data.open_amount if data else 0,
+            "last_invoice": async_redact_data(data.last_invoice.as_row(), TO_REDACT)
+            if data and data.last_invoice
             else None,
         },
     }
