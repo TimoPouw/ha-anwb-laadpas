@@ -42,8 +42,8 @@ sections:
           {% if s and s.attributes.location_name %}
           **{{ s.attributes.location_name }}**, {{ s.attributes.city }}
           {%- if s.attributes.operator_name %} ({{ s.attributes.operator_name }}){% endif %}
-          {%- if s.attributes.latitude %}
-          [Open in kaart](https://www.openstreetmap.org/?mlat={{ s.attributes.latitude }}&mlon={{ s.attributes.longitude }}#map=17/{{ s.attributes.latitude }}/{{ s.attributes.longitude }})
+          {%- if s.attributes.location_latitude %}
+          [Open in kaart](https://www.openstreetmap.org/?mlat={{ s.attributes.location_latitude }}&mlon={{ s.attributes.location_longitude }}#map=17/{{ s.attributes.location_latitude }}/{{ s.attributes.location_longitude }})
           {%- endif %}
           {% endif %}
   - type: grid

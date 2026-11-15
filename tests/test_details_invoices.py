@@ -406,3 +406,21 @@ async def test_unload_stops_backfill(
         assert await hass.config_entries.async_unload(mock_config_entry.entry_id)
         await hass.async_block_till_done()
         assert task.cancelled()
+
+
+async def test_coordinates_do_not_put_sensors_on_the_map(
+    hass: HomeAssistant,
+    fake_api: FakeDeftpower,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    await _setup(hass, mock_config_entry)
+    for state in hass.states.async_all("sensor"):
+        # The map dashboard and map cards pick up any entity with these.
+        assert "latitude" not in state.attributes, state.entity_id
+        assert "longitude" not in state.attributes, state.entity_id
+    entity_id = er.async_get(hass).async_get_entity_id(
+        "sensor", DOMAIN, f"{USER_ID}_last_session_energy"
+    )
+    attrs = hass.states.get(entity_id).attributes
+    assert attrs["location_latitude"] is not None
+    assert attrs["location_longitude"] is not None

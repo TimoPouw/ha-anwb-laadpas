@@ -130,6 +130,10 @@ so roughly 8 to 10 minutes for 250 sessions). It does not delay the setup or
 the regular updates, and its progress is saved, so a restart continues where
 it left off. Until then these fields are empty for older sessions.
 
+On the sensors the coordinates are called `location_latitude` and
+`location_longitude`, so the charging stations do not appear as entities on
+maps; the `anwb_laadpas_new_session` event uses `latitude` and `longitude`.
+
 ## Viewing all sessions
 
 A complete dashboard view with this month's figures, the last session, a

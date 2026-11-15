@@ -34,7 +34,13 @@ def _session_attributes(
 ) -> dict[str, Any] | None:
     if session is None:
         return None
-    return session.as_event_data(coordinator.card_name(session.card_id))
+    data = session.as_event_data(coordinator.card_name(session.card_id))
+    # Entities with latitude/longitude attributes show up on maps (the map
+    # dashboard, map cards). These are a charging station's coordinates, not
+    # a tracked location, so expose them under other names.
+    data["location_latitude"] = data.pop("latitude", None)
+    data["location_longitude"] = data.pop("longitude", None)
+    return data
 
 
 def _duration_minutes(session: ChargingSession | None) -> float | None:
