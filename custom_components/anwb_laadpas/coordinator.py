@@ -135,6 +135,8 @@ class AnwbLaadpasCoordinator(DataUpdateCoordinator[LaadpasData]):
         self._known_invoice_ids: set[str] = set()
         self._detail_attempts: dict[str, int] = {}
         self._backfill_task: asyncio.Task[None] | None = None
+        # Options the entities were last written with (see the update listener).
+        self.applied_options: dict[str, Any] = dict(entry.options)
         # True once the full history has been loaded; events fire after that.
         self._synced = False
 

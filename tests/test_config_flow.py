@@ -248,3 +248,35 @@ async def test_options_flow_names_cards(
         )
     )
     assert names == ["ANWB Laadpas", "Laadpas NL-XXX-C00000001-A", "Tesla"]
+
+
+async def test_card_name_shows_in_attributes_right_away(
+    hass: HomeAssistant,
+    fake_api: FakeDeftpower,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    from homeassistant.helpers import entity_registry as er
+
+    mock_config_entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    entity_id = er.async_get(hass).async_get_entity_id(
+        "sensor", DOMAIN, f"{USER_ID}_sessions"
+    )
+
+    def cards() -> set[str]:
+        rows = hass.states.get(entity_id).attributes["sessions"]
+        return {row["card"] for row in rows}
+
+    assert cards() == {"NL-XXX-C00000001-A", "NL-XXX-C00000002-B"}
+    calls = len(fake_api.session_calls())
+
+    result = await hass.config_entries.options.async_init(mock_config_entry.entry_id)
+    await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_SCAN_INTERVAL: 30, "NL-XXX-C00000002-B": "Werk"}
+    )
+    await hass.async_block_till_done()
+
+    # Without waiting for (or triggering) a new update.
+    assert cards() == {"NL-XXX-C00000001-A", "Werk"}
+    assert len(fake_api.session_calls()) == calls

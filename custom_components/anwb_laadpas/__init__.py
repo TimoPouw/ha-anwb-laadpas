@@ -107,6 +107,12 @@ async def _async_entry_updated(
         if device and device.name != name:
             device_registry.async_update_device(device.id, name=name)
 
+    # Card names also appear in sensor attributes (session lists, last
+    # session): write the states again now instead of at the next update.
+    if dict(entry.options) != coordinator.applied_options:
+        coordinator.applied_options = dict(entry.options)
+        coordinator.async_update_listeners()
+
 
 async def async_unload_entry(
     hass: HomeAssistant, entry: AnwbLaadpasConfigEntry
