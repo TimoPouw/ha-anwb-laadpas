@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from freezegun.api import FrozenDateTimeFactory
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
@@ -19,7 +20,6 @@ from pytest_homeassistant_custom_component.common import (
 
 from custom_components.anwb_laadpas.const import (
     CONF_AUTO_DOWNLOAD,
-    DETAILS_PER_UPDATE,
     DOMAIN,
     EVENT_NEW_INVOICE,
     EVENT_NEW_SESSION,
@@ -49,10 +49,12 @@ def _listen(hass: HomeAssistant, event_type: str) -> list[Any]:
     return events
 
 
-async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+async def _setup(
+    hass: HomeAssistant, entry: MockConfigEntry, wait_backfill: bool = True
+) -> None:
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
-    await hass.async_block_till_done()
+    await hass.async_block_till_done(wait_background_tasks=wait_backfill)
 
 
 async def _tick(hass: HomeAssistant, freezer: FrozenDateTimeFactory) -> None:
@@ -62,22 +64,36 @@ async def _tick(hass: HomeAssistant, freezer: FrozenDateTimeFactory) -> None:
     await hass.async_block_till_done(wait_background_tasks=True)
 
 
-async def test_details_backfill_in_batches(
+async def test_details_backfill_runs_in_background(
     hass: HomeAssistant,
     fake_api: FakeDeftpower,
     mock_config_entry: MockConfigEntry,
     freezer: FrozenDateTimeFactory,
 ) -> None:
-    await _setup(hass, mock_config_entry)
-    data = mock_config_entry.runtime_data.data
-    # First sync: only one batch, newest first.
-    assert len(fake_api.detail_calls()) == DETAILS_PER_UPDATE
-    assert fake_api.detail_calls()[0] == data.sessions[0].id
-    assert data.details_pending == 30 - DETAILS_PER_UPDATE
+    import asyncio
+    from unittest.mock import patch
 
-    await _tick(hass, freezer)
+    from custom_components.anwb_laadpas.api import AnwbLaadpasClient
+
+    release = asyncio.Event()
+    original = AnwbLaadpasClient.async_get_session_details
+
+    async def _slow(self, session_id):
+        await release.wait()
+        return await original(self, session_id)
+
+    with patch.object(AnwbLaadpasClient, "async_get_session_details", _slow):
+        await _setup(hass, mock_config_entry, wait_backfill=False)
+        # Setup finished while the details are still being fetched.
+        assert mock_config_entry.state is ConfigEntryState.LOADED
+        assert mock_config_entry.runtime_data.data.details_pending == 30
+        release.set()
+        await hass.async_block_till_done(wait_background_tasks=True)
+
     data = mock_config_entry.runtime_data.data
     assert data.details_pending == 0
+    # Newest first, one call per session.
+    assert fake_api.detail_calls()[0] == data.sessions[0].id
     assert len(fake_api.detail_calls()) == 30
 
     # Nothing left to fetch: no more detail calls.
@@ -89,6 +105,34 @@ async def test_details_backfill_in_batches(
     assert last.details.vehicle == "Example EV1"
     assert last.details.connector_standard == "IEC_62196_T2"
     assert last.details.cost_excl_vat == pytest.approx(last.cost / 1.21, abs=0.01)
+
+    # The sensors show the details without waiting for the next update.
+    entity_id = er.async_get(hass).async_get_entity_id(
+        "sensor", DOMAIN, f"{USER_ID}_last_session_energy"
+    )
+    assert hass.states.get(entity_id).attributes["operator_name"] == (
+        "Example Operator AAA"
+    )
+
+
+async def test_backfill_pauses_between_calls(
+    hass: HomeAssistant,
+    fake_api: FakeDeftpower,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    from unittest.mock import patch
+
+    delays: list[float] = []
+
+    async def _sleep(delay: float) -> None:
+        delays.append(delay)
+
+    with (
+        patch("custom_components.anwb_laadpas.coordinator.BACKFILL_DELAY", 1.5),
+        patch("custom_components.anwb_laadpas.coordinator.asyncio.sleep", _sleep),
+    ):
+        await _setup(hass, mock_config_entry)
+    assert delays.count(1.5) == 30
 
 
 async def test_new_session_event_has_details(
@@ -332,7 +376,7 @@ async def test_diagnostics_include_invoices_redacted(
     await _setup(hass, mock_config_entry)
     diag = await async_get_config_entry_diagnostics(hass, mock_config_entry)
     assert diag["data"]["invoice_count"] == 10
-    assert diag["data"]["sessions_without_details"] == 30 - DETAILS_PER_UPDATE
+    assert diag["data"]["sessions_without_details"] == 0
     dumped = json.dumps(diag, default=str)
     assert fake_api.invoices[0]["invoice"]["invoiceNumber"] not in dumped
     detail = fake_api.details[fake_api.sessions[0]["chargingSession"]["id"]]
@@ -340,3 +384,25 @@ async def test_diagnostics_include_invoices_redacted(
         str(detail["chargingSession"]["location"]["coordinates"]["latitude"])
         not in dumped
     )
+
+
+async def test_unload_stops_backfill(
+    hass: HomeAssistant,
+    fake_api: FakeDeftpower,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    import asyncio
+    from unittest.mock import patch
+
+    from custom_components.anwb_laadpas.api import AnwbLaadpasClient
+
+    async def _never(self, session_id):
+        await asyncio.Event().wait()
+
+    with patch.object(AnwbLaadpasClient, "async_get_session_details", _never):
+        await _setup(hass, mock_config_entry, wait_backfill=False)
+        task = mock_config_entry.runtime_data._backfill_task
+        assert task is not None and not task.done()
+        assert await hass.config_entries.async_unload(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+        assert task.cancelled()

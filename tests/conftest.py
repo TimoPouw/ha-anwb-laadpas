@@ -50,6 +50,13 @@ def auto_enable_custom_integrations(enable_custom_integrations: None) -> None:
     """Enable loading custom integrations in all tests."""
 
 
+@pytest.fixture(autouse=True)
+def no_backfill_delay() -> Generator[None]:
+    """Do not pause between detail calls in tests."""
+    with patch("custom_components.anwb_laadpas.coordinator.BACKFILL_DELAY", 0):
+        yield
+
+
 def load_sessions() -> list[dict[str, Any]]:
     """Return the fictional session list (newest first)."""
     return json.loads((FIXTURES / "sessions.json").read_text())
