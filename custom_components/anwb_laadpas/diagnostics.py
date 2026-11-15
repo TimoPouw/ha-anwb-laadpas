@@ -30,6 +30,8 @@ TO_REDACT = {
     "invoice_id",
     "number",
     "files",
+    "pdf_url",
+    "specification_url",
 }
 
 

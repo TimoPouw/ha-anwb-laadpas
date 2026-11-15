@@ -25,6 +25,7 @@ from .const import (
 )
 from .coordinator import AnwbLaadpasCoordinator
 from .entity import card_device_identifier, card_device_name
+from .http import async_register_views
 from .services import async_setup_services
 
 _LOGGER = logging.getLogger(__name__)
@@ -37,8 +38,9 @@ type AnwbLaadpasConfigEntry = ConfigEntry[AnwbLaadpasCoordinator]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Register the actions."""
+    """Register the actions and the invoice download view."""
     async_setup_services(hass)
+    async_register_views(hass)
     return True
 
 

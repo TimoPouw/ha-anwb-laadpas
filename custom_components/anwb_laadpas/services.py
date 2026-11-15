@@ -20,6 +20,7 @@ import voluptuous as vol
 
 from .api import ApiError, AuthError
 from .const import DOMAIN
+from .http import links_for_rows
 from .invoices import INVOICE, SPECIFICATION, async_save_invoice
 
 SERVICE_GET_SESSIONS = "get_sessions"
@@ -164,7 +165,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
                     continue
                 if call.data[ATTR_UNPAID_ONLY] and invoice.is_paid:
                     continue
-                rows.append(invoice.as_row())
+                rows.extend(links_for_rows(hass, entry.entry_id, [invoice]))
         rows.sort(key=lambda row: row["date"] or "", reverse=True)
         if limit := call.data.get(ATTR_LIMIT):
             rows = rows[:limit]

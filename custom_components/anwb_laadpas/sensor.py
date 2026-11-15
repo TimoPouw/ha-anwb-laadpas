@@ -20,6 +20,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import AnwbLaadpasConfigEntry
 from .coordinator import AnwbLaadpasCoordinator, LaadpasData, month_start
 from .entity import AnwbLaadpasEntity
+from .http import links_for_rows
 from .models import ChargingSession
 
 # Coordinator based, the coordinator serializes updates.
@@ -53,7 +54,9 @@ class LaadpasSensorDescription(SensorEntityDescription):
     value_fn: Callable[[LaadpasData, str | None], Any]
     with_session_attributes: bool = False
     with_session_list: bool = False
-    attributes_fn: Callable[[LaadpasData], dict[str, Any] | None] | None = None
+    attributes_fn: Callable[[AnwbLaadpasCoordinator], dict[str, Any] | None] | None = (
+        None
+    )
     last_reset_fn: Callable[[], datetime] | None = None
 
 
@@ -169,8 +172,14 @@ LAST_INVOICE = LaadpasSensorDescription(
     value_fn=lambda data, card: (
         data.last_invoice.amount_incl_vat if data.last_invoice else None
     ),
-    attributes_fn=lambda data: (
-        data.last_invoice.as_row() if data.last_invoice else None
+    attributes_fn=lambda coordinator: (
+        links_for_rows(
+            coordinator.hass,
+            coordinator.config_entry.entry_id,
+            [coordinator.data.last_invoice],
+        )[0]
+        if coordinator.data.last_invoice
+        else None
     ),
 )
 OPEN_AMOUNT = LaadpasSensorDescription(
@@ -186,7 +195,13 @@ INVOICES = LaadpasSensorDescription(
     translation_key="invoices",
     state_class=SensorStateClass.TOTAL_INCREASING,
     value_fn=lambda data, card: len(data.invoices),
-    attributes_fn=lambda data: {"invoices": [i.as_row() for i in data.invoices]},
+    attributes_fn=lambda coordinator: {
+        "invoices": links_for_rows(
+            coordinator.hass,
+            coordinator.config_entry.entry_id,
+            coordinator.data.invoices,
+        )
+    },
 )
 
 ACCOUNT_SENSORS: tuple[LaadpasSensorDescription, ...] = (
@@ -282,7 +297,7 @@ class LaadpasSensor(AnwbLaadpasEntity, SensorEntity):
     def extra_state_attributes(self) -> dict[str, Any] | None:
         """Return details of the last session on the energy sensor."""
         if self.entity_description.attributes_fn is not None:
-            return self.entity_description.attributes_fn(self.coordinator.data)
+            return self.entity_description.attributes_fn(self.coordinator)
         if self.entity_description.with_session_list:
             return {
                 "sessions": [
