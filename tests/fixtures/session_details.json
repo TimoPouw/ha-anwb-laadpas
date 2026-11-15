@@ -1,0 +1,1527 @@
+{
+  "NLAAA-900000000": {
+    "chargingSession": {
+      "id": "NLAAA-900000000",
+      "sessionId": "900000000",
+      "startDateTime": "2026-11-08T12:15:16Z",
+      "endDateTime": "2026-11-08T15:18:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 7.68,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 3.74,
+        "incl_vat": 4.53
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000000",
+        "locationId": "000000000000000000000000",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1000*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.323833,
+          "longitude": 5.150849
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999999": {
+    "chargingSession": {
+      "id": "NLBBB-899999999",
+      "sessionId": "899999999",
+      "startDateTime": "2026-11-02T08:15:16Z",
+      "endDateTime": "2026-11-02T09:37:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 12.37,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 6.03,
+        "incl_vat": 7.3
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "locationId": "000000000000000000000001",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1001*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.650934,
+          "longitude": 5.072436
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999998": {
+    "chargingSession": {
+      "id": "NLCCC-899999998",
+      "sessionId": "899999998",
+      "startDateTime": "2026-10-27T07:15:16Z",
+      "endDateTime": "2026-10-27T10:28:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 34.11,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 16.63,
+        "incl_vat": 20.12
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "locationId": "000000000000000000000002",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1002*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.535882,
+          "longitude": 5.365689
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999997": {
+    "chargingSession": {
+      "id": "NLDDD-899999997",
+      "sessionId": "899999997",
+      "startDateTime": "2026-10-22T06:15:16.000Z",
+      "endDateTime": "2026-10-22T09:06:16.000Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 20.72,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 10.1,
+        "incl_vat": 12.22
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000003",
+        "locationId": "000000000000000000000003",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1003*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.057999,
+          "longitude": 5.507436
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999996": {
+    "chargingSession": {
+      "id": "NLAAA-899999996",
+      "sessionId": "899999996",
+      "startDateTime": "2026-10-21T05:15:16Z",
+      "endDateTime": "2026-10-21T06:30:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 12.77,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 6.22,
+        "incl_vat": 7.53
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "locationId": "000000000000000000000004",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1004*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.037496,
+          "longitude": 5.433646
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": null
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": null
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999995": {
+    "chargingSession": {
+      "id": "NLBBB-899999995",
+      "sessionId": "899999995",
+      "startDateTime": "2026-10-16T05:15:16Z",
+      "endDateTime": "2026-10-16T07:58:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 11.35,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 5.54,
+        "incl_vat": 6.7
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "locationId": "000000000000000000000005",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1005*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.069855,
+          "longitude": 5.090713
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999994": {
+    "chargingSession": {
+      "id": "NLCCC-899999994",
+      "sessionId": "899999994",
+      "startDateTime": "2026-10-09T18:15:16Z",
+      "endDateTime": "2026-10-09T20:54:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 20.62,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 10.06,
+        "incl_vat": 12.17
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000006",
+        "locationId": "000000000000000000000006",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1006*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.424519,
+          "longitude": 5.826852
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999993": {
+    "chargingSession": {
+      "id": "NLDDD-899999993",
+      "sessionId": "899999993",
+      "startDateTime": "2026-10-05T09:15:16Z",
+      "endDateTime": "2026-10-05T10:46:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 37.0,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": null,
+        "incl_vat": null
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000007",
+        "locationId": "000000000000000000000007",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1007*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.123802,
+          "longitude": 5.223239
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999992": {
+    "chargingSession": {
+      "id": "NLAAA-899999992",
+      "sessionId": "899999992",
+      "startDateTime": "2026-10-03T21:15:16Z",
+      "endDateTime": "2026-10-04T01:01:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 9.71,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 4.74,
+        "incl_vat": 5.73
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000008",
+        "locationId": "000000000000000000000008",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1008*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.627433,
+          "longitude": 5.947709
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999991": {
+    "chargingSession": {
+      "id": "NLBBB-899999991",
+      "sessionId": "899999991",
+      "startDateTime": "2026-09-29T16:15:16Z",
+      "endDateTime": "2026-09-29T17:46:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 9.53,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 4.64,
+        "incl_vat": 5.62
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000009",
+        "locationId": "000000000000000000000009",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1009*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.577103,
+          "longitude": 5.39668
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999990": {
+    "chargingSession": {
+      "id": "NLCCC-899999990",
+      "sessionId": "899999990",
+      "startDateTime": "2026-09-26T15:15:16.000Z",
+      "endDateTime": "2026-09-26T15:58:16.000Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 18.96,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 9.25,
+        "incl_vat": 11.19
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000010",
+        "locationId": "00000000000000000000000a",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1010*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.976255,
+          "longitude": 5.046583
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999989": {
+    "chargingSession": {
+      "id": "NLDDD-899999989",
+      "sessionId": "899999989",
+      "startDateTime": "2026-09-23T10:15:16Z",
+      "endDateTime": "2026-09-23T13:09:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 14.11,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 6.88,
+        "incl_vat": 8.32
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000011",
+        "locationId": "00000000000000000000000b",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1011*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.858468,
+          "longitude": 5.289609
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999988": {
+    "chargingSession": {
+      "id": "NLAAA-899999988",
+      "sessionId": "899999988",
+      "startDateTime": "2026-09-21T23:15:16Z",
+      "endDateTime": null,
+      "sessionStatus": "COMPLETED",
+      "kwh": 25.52,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 12.45,
+        "incl_vat": 15.06
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000012",
+        "locationId": "00000000000000000000000c",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1012*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.144255,
+          "longitude": 5.117792
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999987": {
+    "chargingSession": {
+      "id": "NLBBB-899999987",
+      "sessionId": "899999987",
+      "startDateTime": "2026-09-17T22:15:16Z",
+      "endDateTime": "2026-09-18T00:56:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 15.31,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 7.46,
+        "incl_vat": 9.03
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000013",
+        "locationId": "00000000000000000000000d",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1013*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.308482,
+          "longitude": 5.816126
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999986": {
+    "chargingSession": {
+      "id": "NLCCC-899999986",
+      "sessionId": "899999986",
+      "startDateTime": "2026-09-11T13:15:16Z",
+      "endDateTime": "2026-09-11T17:15:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 18.19,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 8.87,
+        "incl_vat": 10.73
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000014",
+        "locationId": "00000000000000000000000e",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1014*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.180726,
+          "longitude": 5.5816
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999985": {
+    "chargingSession": {
+      "id": "NLDDD-899999985",
+      "sessionId": "899999985",
+      "startDateTime": "2026-09-09T02:15:16Z",
+      "endDateTime": "2026-09-09T02:52:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 4.92,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 2.4,
+        "incl_vat": 2.9
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000015",
+        "locationId": "00000000000000000000000f",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1015*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.638913,
+          "longitude": 5.372398
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999984": {
+    "chargingSession": {
+      "id": "NLAAA-899999984",
+      "sessionId": "899999984",
+      "startDateTime": "2026-09-06T14:15:16Z",
+      "endDateTime": "2026-09-06T15:49:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 44.38,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 21.64,
+        "incl_vat": 26.18
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000016",
+        "locationId": "000000000000000000000010",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1016*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.547744,
+          "longitude": 5.062789
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999983": {
+    "chargingSession": {
+      "id": "NLBBB-899999983",
+      "sessionId": "899999983",
+      "startDateTime": "2026-09-04T13:15:16.000Z",
+      "endDateTime": "2026-09-04T15:12:16.000Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 14.67,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 7.16,
+        "incl_vat": 8.66
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000017",
+        "locationId": "000000000000000000000011",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1017*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.059601,
+          "longitude": 5.205959
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999982": {
+    "chargingSession": {
+      "id": "NLCCC-899999982",
+      "sessionId": "899999982",
+      "startDateTime": "2026-08-29T08:15:16Z",
+      "endDateTime": "2026-08-29T09:16:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 18.55,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 9.04,
+        "incl_vat": 10.94
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000018",
+        "locationId": "000000000000000000000012",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1018*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.6804,
+          "longitude": 5.427592
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999981": {
+    "chargingSession": {
+      "id": "NLDDD-899999981",
+      "sessionId": "899999981",
+      "startDateTime": "2026-08-26T22:15:16Z",
+      "endDateTime": "2026-08-26T23:43:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 32.48,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 15.83,
+        "incl_vat": 19.16
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000019",
+        "locationId": "000000000000000000000013",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1019*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.314147,
+          "longitude": 5.585562
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999980": {
+    "chargingSession": {
+      "id": "NLAAA-899999980",
+      "sessionId": "899999980",
+      "startDateTime": "2026-08-20T12:15:16Z",
+      "endDateTime": "2026-08-20T12:53:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 28.58,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 13.93,
+        "incl_vat": 16.86
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000020",
+        "locationId": "000000000000000000000014",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1020*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.453184,
+          "longitude": 5.299767
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999979": {
+    "chargingSession": {
+      "id": "NLBBB-899999979",
+      "sessionId": "899999979",
+      "startDateTime": "2026-08-18T04:15:16Z",
+      "endDateTime": "2026-08-18T07:41:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 13.28,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 6.48,
+        "incl_vat": 7.84
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000021",
+        "locationId": "000000000000000000000015",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1021*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.794379,
+          "longitude": 5.698994
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999978": {
+    "chargingSession": {
+      "id": "NLCCC-899999978",
+      "sessionId": "899999978",
+      "startDateTime": "2026-08-13T22:15:16Z",
+      "endDateTime": "2026-08-13T23:44:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 44.56,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 21.73,
+        "incl_vat": 26.29
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000022",
+        "locationId": "000000000000000000000016",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1022*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.244097,
+          "longitude": 5.574424
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999977": {
+    "chargingSession": {
+      "id": "NLDDD-899999977",
+      "sessionId": "899999977",
+      "startDateTime": "2026-08-07T11:15:16Z",
+      "endDateTime": "2026-08-07T13:57:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 12.22,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 5.96,
+        "incl_vat": 7.21
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000023",
+        "locationId": "000000000000000000000017",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1023*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.525197,
+          "longitude": 5.875137
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999976": {
+    "chargingSession": {
+      "id": "NLAAA-899999976",
+      "sessionId": "899999976",
+      "startDateTime": "2026-08-03T23:15:16.000Z",
+      "endDateTime": "2026-08-04T02:53:16.000Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 5.35,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 2.61,
+        "incl_vat": 3.16
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000024",
+        "locationId": "000000000000000000000018",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1024*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.729445,
+          "longitude": 5.287938
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999975": {
+    "chargingSession": {
+      "id": "NLBBB-899999975",
+      "sessionId": "899999975",
+      "startDateTime": "2026-08-02T11:15:16Z",
+      "endDateTime": "2026-08-02T12:55:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 19.85,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 9.68,
+        "incl_vat": 11.71
+      },
+      "token": {
+        "id": 100001,
+        "emaId": "NL-XXX-C00000001-A"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000025",
+        "locationId": "000000000000000000000019",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1025*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.980175,
+          "longitude": 5.118066
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLCCC-899999974": {
+    "chargingSession": {
+      "id": "NLCCC-899999974",
+      "sessionId": "899999974",
+      "startDateTime": "2026-08-01T08:15:16Z",
+      "endDateTime": "2026-08-01T11:00:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 39.81,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 19.41,
+        "incl_vat": 23.49
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000026",
+        "locationId": "00000000000000000000001a",
+        "name": "Snellader Snelweg A99",
+        "address": "Rijksweg 99",
+        "city": "Nergenshuizen",
+        "postalCode": "3456CD",
+        "evseId": "NL*CCC*E1026*1",
+        "countryCode": "NL",
+        "partyId": "CCC",
+        "coordinates": {
+          "latitude": 52.418123,
+          "longitude": 5.757141
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator CCC"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLDDD-899999973": {
+    "chargingSession": {
+      "id": "NLDDD-899999973",
+      "sessionId": "899999973",
+      "startDateTime": "2026-07-29T05:15:16Z",
+      "endDateTime": "2026-07-29T08:22:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 23.97,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 11.69,
+        "incl_vat": 14.14
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000027",
+        "locationId": "00000000000000000000001b",
+        "name": "Rastst\u00e4tte Musterhausen",
+        "address": "Musterweg 5",
+        "city": "Musterhausen",
+        "postalCode": "12345",
+        "evseId": "DE*DDD*E1027*1",
+        "countryCode": "DE",
+        "partyId": "DDD",
+        "coordinates": {
+          "latitude": 52.151985,
+          "longitude": 5.488963
+        },
+        "connectorStandard": "IEC_62196_T2",
+        "connectorFormat": "SOCKET",
+        "operatorName": "Example Operator DDD"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLAAA-899999972": {
+    "chargingSession": {
+      "id": "NLAAA-899999972",
+      "sessionId": "899999972",
+      "startDateTime": "2026-07-22T22:15:16Z",
+      "endDateTime": "2026-07-22T23:11:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 14.12,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 6.88,
+        "incl_vat": 8.33
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000028",
+        "locationId": "00000000000000000000001c",
+        "name": "Teststraat 1 Laadplein",
+        "address": "Teststraat 1",
+        "city": "Voorbeelddorp",
+        "postalCode": "1234AB",
+        "evseId": "NL*AAA*E1028*1",
+        "countryCode": "NL",
+        "partyId": "AAA",
+        "coordinates": {
+          "latitude": 52.039207,
+          "longitude": 5.668216
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator AAA"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  },
+  "NLBBB-899999971": {
+    "chargingSession": {
+      "id": "NLBBB-899999971",
+      "sessionId": "899999971",
+      "startDateTime": "2026-07-20T11:15:16Z",
+      "endDateTime": "2026-07-20T13:58:16Z",
+      "sessionStatus": "COMPLETED",
+      "kwh": 25.64,
+      "currency": "EUR",
+      "totalCosts": {
+        "excl_vat": 12.5,
+        "incl_vat": 15.13
+      },
+      "token": {
+        "id": 100002,
+        "emaId": "NL-XXX-C00000002-B"
+      },
+      "location": {
+        "id": "00000000-0000-4000-8000-000000000029",
+        "locationId": "00000000000000000000001d",
+        "name": "Parkeergarage Centrum",
+        "address": "Marktplein 10",
+        "city": "Fictiestad",
+        "postalCode": "2345BC",
+        "evseId": "NL*BBB*E1029*1",
+        "countryCode": "NL",
+        "partyId": "BBB",
+        "coordinates": {
+          "latitude": 52.764571,
+          "longitude": 5.573026
+        },
+        "connectorStandard": "IEC_62196_T2_COMBO",
+        "connectorFormat": "CABLE",
+        "operatorName": "Example Operator BBB"
+      },
+      "isGenerated": false,
+      "isSmartCharging": false,
+      "isVehicleApiEnabled": true,
+      "stopReason": null,
+      "completionType": "AUTOMATED",
+      "vehicle": {
+        "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+        "manufacturerName": "Example",
+        "manufacturerModelName": "EV1",
+        "manufacturerModelVersion": null
+      }
+    },
+    "relatedMspCdr": null,
+    "relatedCpoCdr": null,
+    "profile": null
+  }
+}

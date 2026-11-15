@@ -55,6 +55,19 @@ def load_sessions() -> list[dict[str, Any]]:
     return json.loads((FIXTURES / "sessions.json").read_text())
 
 
+def load_details() -> dict[str, Any]:
+    """Return the fictional session details by session id."""
+    return json.loads((FIXTURES / "session_details.json").read_text())
+
+
+def load_invoices() -> list[dict[str, Any]]:
+    """Return the fictional invoices (newest first)."""
+    return json.loads((FIXTURES / "invoices.json").read_text())
+
+
+FAKE_PDF = b"%PDF-1.4 fictional test document"
+
+
 def make_jwt(claims: dict[str, Any]) -> str:
     """Build an unsigned JWT for tests."""
 
@@ -92,6 +105,12 @@ class FakeDeftpower:
         self.client_id = CLIENT_ID
         self.app_config_status = 200
         self.tenant_id: str | None = TENANT_ID
+        self.details = load_details()
+        self.details_status = 200
+        self.invoices = load_invoices()
+        self.invoices_status = 200
+        self.downloads: list[dict[str, str]] = []
+        self.file_content = FAKE_PDF
 
         mocker.get(
             f"{PORTAL}/assets/appconfig.production.json", side_effect=self._app_config
@@ -109,14 +128,88 @@ class FakeDeftpower:
             f"{API}/api/services/app/ChargingSessions/GetAll",
             side_effect=self._sessions,
         )
+        mocker.get(
+            f"{API}/api/services/app/ChargingSessions/GetChargingSessionForView",
+            side_effect=self._detail,
+        )
+        mocker.get(
+            f"{API}/api/services/app/Invoices/GetAll", side_effect=self._invoices
+        )
+        mocker.post(
+            f"{API}/api/services/app/Invoices/Download", side_effect=self._download
+        )
+        mocker.get(f"{API}/File/DownloadTempFile", side_effect=self._temp_file)
 
     def add_session(self, item: dict[str, Any]) -> None:
         """Add a session at the top of the list."""
         self.sessions.insert(0, item)
 
     def session_calls(self) -> list[Any]:
-        """Return the recorded calls to the sessions endpoint."""
-        return [c for c in self.mocker.mock_calls if "ChargingSessions" in str(c[1])]
+        """Return the recorded calls to the sessions list endpoint."""
+        return [
+            c for c in self.mocker.mock_calls if "ChargingSessions/GetAll" in str(c[1])
+        ]
+
+    def detail_calls(self) -> list[str]:
+        """Return the session ids for which details were requested."""
+        return [
+            parse_qs(c[1].query_string)["id"][0]
+            for c in self.mocker.mock_calls
+            if "GetChargingSessionForView" in str(c[1])
+        ]
+
+    async def _detail(self, method: str, url: Any, data: Any) -> Any:
+        session_id = parse_qs(url.query_string)["id"][0]
+        if self.details_status != 200 or session_id not in self.details:
+            return AiohttpClientMockResponse(
+                method,
+                url,
+                status=self.details_status if self.details_status != 200 else 500,
+            )
+        return AiohttpClientMockResponse(
+            method, url, json=abp(copy.deepcopy(self.details[session_id]))
+        )
+
+    async def _invoices(self, method: str, url: Any, data: Any) -> Any:
+        if self.invoices_status != 200:
+            return AiohttpClientMockResponse(method, url, status=self.invoices_status)
+        query = parse_qs(url.query_string)
+        offset = int(query["SkipCount"][0])
+        limit = int(query["MaxResultCount"][0])
+        return AiohttpClientMockResponse(
+            method,
+            url,
+            json=abp(
+                {
+                    "totalCount": len(self.invoices),
+                    "items": copy.deepcopy(self.invoices[offset : offset + limit]),
+                }
+            ),
+        )
+
+    async def _download(self, method: str, url: Any, data: Any) -> Any:
+        query = {k: v[0] for k, v in parse_qs(url.query_string).items()}
+        self.downloads.append(query)
+        kind = query.get("type", "invoice")
+        return AiohttpClientMockResponse(
+            method,
+            url,
+            json=abp(
+                {
+                    "fileName": f"{kind}-{query['invoiceNumber']}.pdf",
+                    "fileType": "application/pdf",
+                    "fileToken": f"token-{len(self.downloads)}",
+                }
+            ),
+        )
+
+    async def _temp_file(self, method: str, url: Any, data: Any) -> Any:
+        return AiohttpClientMockResponse(
+            method,
+            url,
+            response=self.file_content,
+            headers={"Content-Type": "application/pdf"},
+        )
 
     async def _app_config(self, method: str, url: Any, data: Any) -> Any:
         return AiohttpClientMockResponse(

@@ -153,6 +153,7 @@ async def test_sessions_sensor_lists_all_sessions(
         "card",
         "location_name",
         "city",
+        "operator_name",
     }
 
     # The list lives on the account only; per card it would duplicate data.

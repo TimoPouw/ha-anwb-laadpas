@@ -16,7 +16,7 @@ from custom_components.anwb_laadpas.api import (
     async_discover_auth_config,
     parse_redirect_url,
 )
-from custom_components.anwb_laadpas.models import ChargingSession
+from custom_components.anwb_laadpas.models import ChargingSession, Invoice
 
 from .conftest import AUTH_CONFIG, CLIENT_ID, TENANT_ID, FakeDeftpower, load_sessions
 
@@ -135,3 +135,15 @@ async def test_client_unauthorized_redirect(
         await client.async_get_sessions()
     # Initial token plus one forced refresh after the redirect.
     assert fake_api.refresh_counter == 2
+
+
+async def test_download_rejects_non_pdf(
+    hass: HomeAssistant, fake_api: FakeDeftpower
+) -> None:
+    fake_api.file_content = b"<html>login</html>"
+    client = AnwbLaadpasClient(
+        async_get_clientsession(hass), AuthConfig.from_dict(AUTH_CONFIG), "refresh-0"
+    )
+    invoice = Invoice.from_api(fake_api.invoices[0])
+    with pytest.raises(ApiError, match="not a PDF"):
+        await client.async_download_invoice(invoice)

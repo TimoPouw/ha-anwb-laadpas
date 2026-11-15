@@ -87,3 +87,106 @@ for i in range(30):
 
 OUT.write_text(json.dumps(items, indent=2) + "\n")
 print(f"wrote {len(items)} sessions to {OUT}")
+
+
+# --------------------------------------------------------------------------- #
+# Session details and invoices (separate random stream: sessions.json stays
+# identical when this part changes).
+# --------------------------------------------------------------------------- #
+rnd = random.Random(7)
+DETAILS_OUT = OUT.parent / "session_details.json"
+INVOICES_OUT = OUT.parent / "invoices.json"
+
+details = {}
+for i, item in enumerate(items):
+    cs = item["chargingSession"]
+    incl = cs["totalCosts"]["incl_vat"]
+    details[cs["id"]] = {
+        "chargingSession": {
+            **cs,
+            "totalCosts": {
+                "excl_vat": round(incl / 1.21, 2) if incl is not None else None,
+                "incl_vat": incl,
+            },
+            "stopReason": None,
+            "completionType": "AUTOMATED",
+            "location": {
+                **cs["location"],
+                "coordinates": {
+                    "latitude": round(52.0 + rnd.random(), 6),
+                    "longitude": round(5.0 + rnd.random(), 6),
+                },
+                "connectorStandard": "IEC_62196_T2_COMBO" if i % 3 else "IEC_62196_T2",
+                "connectorFormat": "CABLE" if i % 3 else "SOCKET",
+                "operatorName": None
+                if i == 4
+                else f"Example Operator {cs['location']['partyId']}",
+            },
+            "vehicle": None
+            if i == 4
+            else {
+                "profileVehicleId": "00000000-0000-4000-8000-0000000000f1",
+                "manufacturerName": "Example",
+                "manufacturerModelName": "EV1",
+                "manufacturerModelVersion": None,
+            },
+        },
+        "relatedMspCdr": None,
+        "relatedCpoCdr": None,
+        "profile": None,
+    }
+DETAILS_OUT.write_text(json.dumps(details, indent=2) + "\n")
+
+FAKE_PARTNER = {
+    "name": "Test User",
+    "contactEmailInvoice": "test.user@example.invalid",
+    "billingAddress": {
+        "street": "Teststraat",
+        "houseNumber": 1,
+        "postalCode": "1234AB",
+        "city": "Voorbeelddorp",
+    },
+}
+invoices = []
+for n, month in enumerate(range(10, 0, -1)):
+    excl = round(rnd.uniform(5, 250), 2)
+    incl = round(excl * 1.21, 2)
+    unpaid = n == 0
+    invoices.append(
+        {
+            "invoice": {
+                "invoiceNumber": str(1700000010 - n),
+                "invoiceReference": f"NL-EUR-2026{month:02d}01000000-TEST",
+                "totalLocalCostExclVat": excl,
+                "totalLocalCostInclVat": incl,
+                "vat": 21.0,
+                "currency": "EUR",
+                "status": "SENT" if unpaid else "PAID",
+                "paymentStatus": "OPEN" if unpaid else "PAID",
+                "invoiceStatus": "OPEN" if unpaid else "CLOSED",
+                "businessPartner": FAKE_PARTNER,
+                "invoiceLines": [
+                    {
+                        "amount": excl,
+                        "description": f"Laadsessies - (Periode 01-{month:02d}-2026 - 28-{month:02d}-2026)",
+                        "mspCdrIds": [
+                            f"00000000-0000-4000-8000-{n:06d}{k:06d}"
+                            for k in range(n % 4 + 1)
+                        ],
+                        "referenceType": "MSP_CDR",
+                    }
+                ],
+                "dateCreated": f"2026-{month:02d}-02T08:00:00.1234567Z",
+                "datePaid": None if unpaid else f"2026-{month:02d}-20T21:00:00Z",
+                "dateDue": f"2026-{month:02d}-28T00:00:00Z",
+                # Older invoices sometimes have no invoiceDate or invoiceType.
+                "invoiceDate": None if n == 9 else f"2026-{month:02d}-28T00:00:00Z",
+                "invoiceType": None if n >= 7 else "DEBIT",
+                "hasInvoicePdf": True,
+                "id": f"00000000-0000-4000-8000-1{n:011d}",
+            },
+            "pdfInvoice": {"businessPartner": FAKE_PARTNER},
+        }
+    )
+INVOICES_OUT.write_text(json.dumps(invoices, indent=2, ensure_ascii=False) + "\n")
+print(f"wrote {len(details)} details and {len(invoices)} invoices")

@@ -12,6 +12,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.anwb_laadpas.const import (
     CONF_AUTH_CONFIG,
+    CONF_AUTO_DOWNLOAD,
     CONF_CARD_NAMES,
     CONF_REFRESH_TOKEN,
     CONF_SCAN_INTERVAL,
@@ -215,16 +216,26 @@ async def test_options_flow_names_cards(
     assert result["type"] is FlowResultType.FORM
     assert result["description_placeholders"] == {"card_count": "2"}
     fields = [str(k) for k in result["data_schema"].schema]
-    assert fields == [CONF_SCAN_INTERVAL, "NL-XXX-C00000001-A", "NL-XXX-C00000002-B"]
+    assert fields == [
+        CONF_SCAN_INTERVAL,
+        CONF_AUTO_DOWNLOAD,
+        "NL-XXX-C00000001-A",
+        "NL-XXX-C00000002-B",
+    ]
 
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        {CONF_SCAN_INTERVAL: 15, "NL-XXX-C00000002-B": " Tesla "},
+        {
+            CONF_SCAN_INTERVAL: 15,
+            CONF_AUTO_DOWNLOAD: True,
+            "NL-XXX-C00000002-B": " Tesla ",
+        },
     )
     await hass.async_block_till_done()
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert mock_config_entry.options == {
         CONF_SCAN_INTERVAL: 15,
+        CONF_AUTO_DOWNLOAD: True,
         CONF_CARD_NAMES: {"100002": "Tesla"},
     }
 

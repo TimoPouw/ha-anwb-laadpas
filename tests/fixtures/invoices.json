@@ -1,0 +1,535 @@
+[
+  {
+    "invoice": {
+      "invoiceNumber": "1700000010",
+      "invoiceReference": "NL-EUR-20261001000000-TEST",
+      "totalLocalCostExclVat": 219.49,
+      "totalLocalCostInclVat": 265.58,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "SENT",
+      "paymentStatus": "OPEN",
+      "invoiceStatus": "OPEN",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 219.49,
+          "description": "Laadsessies - (Periode 01-10-2026 - 28-10-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000000000000"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-10-02T08:00:00.1234567Z",
+      "datePaid": null,
+      "dateDue": "2026-10-28T00:00:00Z",
+      "invoiceDate": "2026-10-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000000"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000009",
+      "invoiceReference": "NL-EUR-20260901000000-TEST",
+      "totalLocalCostExclVat": 81.87,
+      "totalLocalCostInclVat": 99.06,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 81.87,
+          "description": "Laadsessies - (Periode 01-09-2026 - 28-09-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000001000000",
+            "00000000-0000-4000-8000-000001000001"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-09-02T08:00:00.1234567Z",
+      "datePaid": "2026-09-20T21:00:00Z",
+      "dateDue": "2026-09-28T00:00:00Z",
+      "invoiceDate": "2026-09-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000001"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000008",
+      "invoiceReference": "NL-EUR-20260801000000-TEST",
+      "totalLocalCostExclVat": 175.35,
+      "totalLocalCostInclVat": 212.17,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 175.35,
+          "description": "Laadsessies - (Periode 01-08-2026 - 28-08-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000002000000",
+            "00000000-0000-4000-8000-000002000001",
+            "00000000-0000-4000-8000-000002000002"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-08-02T08:00:00.1234567Z",
+      "datePaid": "2026-08-20T21:00:00Z",
+      "dateDue": "2026-08-28T00:00:00Z",
+      "invoiceDate": "2026-08-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000002"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000007",
+      "invoiceReference": "NL-EUR-20260701000000-TEST",
+      "totalLocalCostExclVat": 150.62,
+      "totalLocalCostInclVat": 182.25,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 150.62,
+          "description": "Laadsessies - (Periode 01-07-2026 - 28-07-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000003000000",
+            "00000000-0000-4000-8000-000003000001",
+            "00000000-0000-4000-8000-000003000002",
+            "00000000-0000-4000-8000-000003000003"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-07-02T08:00:00.1234567Z",
+      "datePaid": "2026-07-20T21:00:00Z",
+      "dateDue": "2026-07-28T00:00:00Z",
+      "invoiceDate": "2026-07-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000003"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000006",
+      "invoiceReference": "NL-EUR-20260601000000-TEST",
+      "totalLocalCostExclVat": 147.07,
+      "totalLocalCostInclVat": 177.95,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 147.07,
+          "description": "Laadsessies - (Periode 01-06-2026 - 28-06-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000004000000"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-06-02T08:00:00.1234567Z",
+      "datePaid": "2026-06-20T21:00:00Z",
+      "dateDue": "2026-06-28T00:00:00Z",
+      "invoiceDate": "2026-06-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000004"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000005",
+      "invoiceReference": "NL-EUR-20260501000000-TEST",
+      "totalLocalCostExclVat": 116.77,
+      "totalLocalCostInclVat": 141.29,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 116.77,
+          "description": "Laadsessies - (Periode 01-05-2026 - 28-05-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000005000000",
+            "00000000-0000-4000-8000-000005000001"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-05-02T08:00:00.1234567Z",
+      "datePaid": "2026-05-20T21:00:00Z",
+      "dateDue": "2026-05-28T00:00:00Z",
+      "invoiceDate": "2026-05-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000005"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000004",
+      "invoiceReference": "NL-EUR-20260401000000-TEST",
+      "totalLocalCostExclVat": 210.79,
+      "totalLocalCostInclVat": 255.06,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 210.79,
+          "description": "Laadsessies - (Periode 01-04-2026 - 28-04-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000006000000",
+            "00000000-0000-4000-8000-000006000001",
+            "00000000-0000-4000-8000-000006000002"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-04-02T08:00:00.1234567Z",
+      "datePaid": "2026-04-20T21:00:00Z",
+      "dateDue": "2026-04-28T00:00:00Z",
+      "invoiceDate": "2026-04-28T00:00:00Z",
+      "invoiceType": "DEBIT",
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000006"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000003",
+      "invoiceReference": "NL-EUR-20260301000000-TEST",
+      "totalLocalCostExclVat": 236.45,
+      "totalLocalCostInclVat": 286.1,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 236.45,
+          "description": "Laadsessies - (Periode 01-03-2026 - 28-03-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000007000000",
+            "00000000-0000-4000-8000-000007000001",
+            "00000000-0000-4000-8000-000007000002",
+            "00000000-0000-4000-8000-000007000003"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-03-02T08:00:00.1234567Z",
+      "datePaid": "2026-03-20T21:00:00Z",
+      "dateDue": "2026-03-28T00:00:00Z",
+      "invoiceDate": "2026-03-28T00:00:00Z",
+      "invoiceType": null,
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000007"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000002",
+      "invoiceReference": "NL-EUR-20260201000000-TEST",
+      "totalLocalCostExclVat": 121.15,
+      "totalLocalCostInclVat": 146.59,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 121.15,
+          "description": "Laadsessies - (Periode 01-02-2026 - 28-02-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000008000000"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-02-02T08:00:00.1234567Z",
+      "datePaid": "2026-02-20T21:00:00Z",
+      "dateDue": "2026-02-28T00:00:00Z",
+      "invoiceDate": "2026-02-28T00:00:00Z",
+      "invoiceType": null,
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000008"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  },
+  {
+    "invoice": {
+      "invoiceNumber": "1700000001",
+      "invoiceReference": "NL-EUR-20260101000000-TEST",
+      "totalLocalCostExclVat": 167.72,
+      "totalLocalCostInclVat": 202.94,
+      "vat": 21.0,
+      "currency": "EUR",
+      "status": "PAID",
+      "paymentStatus": "PAID",
+      "invoiceStatus": "CLOSED",
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      },
+      "invoiceLines": [
+        {
+          "amount": 167.72,
+          "description": "Laadsessies - (Periode 01-01-2026 - 28-01-2026)",
+          "mspCdrIds": [
+            "00000000-0000-4000-8000-000009000000",
+            "00000000-0000-4000-8000-000009000001"
+          ],
+          "referenceType": "MSP_CDR"
+        }
+      ],
+      "dateCreated": "2026-01-02T08:00:00.1234567Z",
+      "datePaid": "2026-01-20T21:00:00Z",
+      "dateDue": "2026-01-28T00:00:00Z",
+      "invoiceDate": null,
+      "invoiceType": null,
+      "hasInvoicePdf": true,
+      "id": "00000000-0000-4000-8000-100000000009"
+    },
+    "pdfInvoice": {
+      "businessPartner": {
+        "name": "Test User",
+        "contactEmailInvoice": "test.user@example.invalid",
+        "billingAddress": {
+          "street": "Teststraat",
+          "houseNumber": 1,
+          "postalCode": "1234AB",
+          "city": "Voorbeelddorp"
+        }
+      }
+    }
+  }
+]
