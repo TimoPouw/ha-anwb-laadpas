@@ -52,6 +52,7 @@ class LaadpasSensorDescription(SensorEntityDescription):
 
     value_fn: Callable[[LaadpasData, str | None], Any]
     with_session_attributes: bool = False
+    with_session_list: bool = False
     last_reset_fn: Callable[[], datetime] | None = None
 
 
@@ -150,6 +151,14 @@ TOTAL_COST = LaadpasSensorDescription(
     value_fn=lambda data, card: data.total_cost(card),
 )
 
+SESSIONS = LaadpasSensorDescription(
+    key="sessions",
+    translation_key="sessions",
+    state_class=SensorStateClass.TOTAL_INCREASING,
+    value_fn=lambda data, card: len(data.for_card(card)),
+    with_session_list=True,
+)
+
 ACCOUNT_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     LAST_SESSION_ENERGY,
     LAST_SESSION_COST,
@@ -161,6 +170,7 @@ ACCOUNT_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     MONTH_COST,
     TOTAL_ENERGY,
     TOTAL_COST,
+    SESSIONS,
 )
 CARD_SENSORS: tuple[LaadpasSensorDescription, ...] = (
     LAST_SESSION_ENERGY,
@@ -210,6 +220,8 @@ class LaadpasSensor(AnwbLaadpasEntity, SensorEntity):
     """A sensor for the account or one charging card."""
 
     entity_description: LaadpasSensorDescription
+    # The full session list is for dashboards only; keep it out of the database.
+    _unrecorded_attributes = frozenset({"sessions"})
 
     def __init__(
         self,
@@ -236,6 +248,13 @@ class LaadpasSensor(AnwbLaadpasEntity, SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         """Return details of the last session on the energy sensor."""
+        if self.entity_description.with_session_list:
+            return {
+                "sessions": [
+                    session.as_row(self.coordinator.card_name(session.card_id))
+                    for session in self.coordinator.data.for_card(self.card_id)
+                ]
+            }
         if not self.entity_description.with_session_attributes:
             return None
         return _session_attributes(

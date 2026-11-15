@@ -1,0 +1,25 @@
+get_sessions:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: anwb_laadpas
+    start:
+      example: "2026-11-01"
+      selector:
+        date:
+    end:
+      example: "2026-11-30"
+      selector:
+        date:
+    card:
+      example: "Tesla"
+      selector:
+        text:
+    limit:
+      example: 20
+      selector:
+        number:
+          min: 1
+          max: 10000
+          mode: box

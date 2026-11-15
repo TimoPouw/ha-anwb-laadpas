@@ -127,3 +127,43 @@ async def test_new_card_adds_device(
 
     state = _state(hass, entity_registry, f"{USER_ID}_card_100003_total_energy")
     assert float(state.state) == item["chargingSession"]["kwh"]
+
+
+async def test_sessions_sensor_lists_all_sessions(
+    hass: HomeAssistant,
+    setup_entry: MockConfigEntry,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    sessions = [i["chargingSession"] for i in load_sessions()]
+    state = _state(hass, entity_registry, f"{USER_ID}_sessions")
+    assert int(state.state) == 30
+    rows = state.attributes["sessions"]
+    assert len(rows) == 30
+    assert rows[0]["session_id"] == sessions[0]["id"]
+    # Local time (Europe/Amsterdam), card number when no name is set.
+    assert rows[0]["start"] == "2026-11-08T13:15:16+01:00"
+    assert rows[0]["card"] == "NL-XXX-C00000001-A"
+    assert set(rows[0]) == {
+        "session_id",
+        "start",
+        "end",
+        "duration_minutes",
+        "energy_kwh",
+        "cost",
+        "card",
+        "location_name",
+        "city",
+    }
+
+    # The list lives on the account only; per card it would duplicate data.
+    assert not entity_registry.async_get_entity_id(
+        "sensor", "anwb_laadpas", f"{USER_ID}_card_100002_sessions"
+    )
+
+
+async def test_session_list_is_not_recorded(
+    hass: HomeAssistant, setup_entry: MockConfigEntry
+) -> None:
+    from custom_components.anwb_laadpas.sensor import LaadpasSensor
+
+    assert "sessions" in LaadpasSensor._unrecorded_attributes

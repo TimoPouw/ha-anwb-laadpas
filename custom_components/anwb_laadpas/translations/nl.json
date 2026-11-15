@@ -59,16 +59,72 @@
   },
   "entity": {
     "sensor": {
-      "last_session_energy": { "name": "Energie laatste sessie" },
-      "last_session_cost": { "name": "Kosten laatste sessie" },
-      "last_session_start": { "name": "Start laatste sessie" },
-      "last_session_end": { "name": "Einde laatste sessie" },
-      "last_session_duration": { "name": "Duur laatste sessie" },
-      "month_sessions": { "name": "Sessies deze maand" },
-      "month_energy": { "name": "Energie deze maand" },
-      "month_cost": { "name": "Kosten deze maand" },
-      "total_energy": { "name": "Totale energie" },
-      "total_cost": { "name": "Totale kosten" }
+      "last_session_energy": {
+        "name": "Energie laatste sessie"
+      },
+      "last_session_cost": {
+        "name": "Kosten laatste sessie"
+      },
+      "last_session_start": {
+        "name": "Start laatste sessie"
+      },
+      "last_session_end": {
+        "name": "Einde laatste sessie"
+      },
+      "last_session_duration": {
+        "name": "Duur laatste sessie"
+      },
+      "month_sessions": {
+        "name": "Sessies deze maand"
+      },
+      "month_energy": {
+        "name": "Energie deze maand"
+      },
+      "month_cost": {
+        "name": "Kosten deze maand"
+      },
+      "total_energy": {
+        "name": "Totale energie"
+      },
+      "total_cost": {
+        "name": "Totale kosten"
+      },
+      "sessions": {
+        "name": "Sessies"
+      }
+    }
+  },
+  "services": {
+    "get_sessions": {
+      "name": "Sessies ophalen",
+      "description": "Geeft je laadsessies terug, nieuwste eerst, met totalen. Gebruik het in scripts, automations of de ontwikkelaarstools.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Het ANWB Laadpas-account. Laat leeg voor alle accounts."
+        },
+        "start": {
+          "name": "Vanaf",
+          "description": "Alleen sessies die op of na deze datum zijn gestart."
+        },
+        "end": {
+          "name": "Tot en met",
+          "description": "Alleen sessies die op of voor deze datum zijn gestart."
+        },
+        "card": {
+          "name": "Pas",
+          "description": "Alleen sessies van deze pas: de naam, het pasnummer of de pas-id."
+        },
+        "limit": {
+          "name": "Maximum",
+          "description": "Geef maximaal dit aantal sessies terug."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "entry_not_loaded": {
+      "message": "Geen geladen ANWB Laadpas-account gevonden."
     }
   }
 }

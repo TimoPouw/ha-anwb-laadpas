@@ -112,6 +112,23 @@ class ChargingSession:
             "operator": self.operator,
         }
 
+    def as_row(self, card_name: str | None) -> dict[str, Any]:
+        """Return a compact summary for session lists, in local time."""
+        duration = self.duration
+        return {
+            "session_id": self.id,
+            "start": dt_util.as_local(self.start).isoformat(),
+            "end": dt_util.as_local(self.end).isoformat() if self.end else None,
+            "duration_minutes": (
+                round(duration.total_seconds() / 60, 1) if duration else None
+            ),
+            "energy_kwh": self.energy_kwh,
+            "cost": self.cost,
+            "card": card_name or self.card_number,
+            "location_name": self.location_name,
+            "city": self.city,
+        }
+
 
 @dataclass(frozen=True, slots=True)
 class SessionPage:

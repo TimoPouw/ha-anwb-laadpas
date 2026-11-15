@@ -9,9 +9,10 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import config_validation as cv, device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.storage import Store
+from homeassistant.helpers.typing import ConfigType
 
 from .api import AnwbLaadpasClient, ApiError, AuthConfig, async_discover_auth_config
 from .const import (
@@ -24,12 +25,21 @@ from .const import (
 )
 from .coordinator import AnwbLaadpasCoordinator
 from .entity import card_device_identifier, card_device_name
+from .services import async_setup_services
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 type AnwbLaadpasConfigEntry = ConfigEntry[AnwbLaadpasCoordinator]
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Register the actions."""
+    async_setup_services(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: AnwbLaadpasConfigEntry) -> bool:

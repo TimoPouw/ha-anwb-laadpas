@@ -59,16 +59,72 @@
   },
   "entity": {
     "sensor": {
-      "last_session_energy": { "name": "Last session energy" },
-      "last_session_cost": { "name": "Last session cost" },
-      "last_session_start": { "name": "Last session start" },
-      "last_session_end": { "name": "Last session end" },
-      "last_session_duration": { "name": "Last session duration" },
-      "month_sessions": { "name": "Sessions this month" },
-      "month_energy": { "name": "Energy this month" },
-      "month_cost": { "name": "Cost this month" },
-      "total_energy": { "name": "Total energy" },
-      "total_cost": { "name": "Total cost" }
+      "last_session_energy": {
+        "name": "Last session energy"
+      },
+      "last_session_cost": {
+        "name": "Last session cost"
+      },
+      "last_session_start": {
+        "name": "Last session start"
+      },
+      "last_session_end": {
+        "name": "Last session end"
+      },
+      "last_session_duration": {
+        "name": "Last session duration"
+      },
+      "month_sessions": {
+        "name": "Sessions this month"
+      },
+      "month_energy": {
+        "name": "Energy this month"
+      },
+      "month_cost": {
+        "name": "Cost this month"
+      },
+      "total_energy": {
+        "name": "Total energy"
+      },
+      "total_cost": {
+        "name": "Total cost"
+      },
+      "sessions": {
+        "name": "Sessions"
+      }
+    }
+  },
+  "services": {
+    "get_sessions": {
+      "name": "Get sessions",
+      "description": "Returns charging sessions, newest first, with totals. Use it in scripts, automations or the developer tools.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "The ANWB Laadpas account. Leave empty for all accounts."
+        },
+        "start": {
+          "name": "From",
+          "description": "Only sessions that started on or after this date."
+        },
+        "end": {
+          "name": "Until",
+          "description": "Only sessions that started on or before this date."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Only sessions of this card: its name, card number or card id."
+        },
+        "limit": {
+          "name": "Maximum",
+          "description": "Return at most this many sessions."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "entry_not_loaded": {
+      "message": "No loaded ANWB Laadpas account found."
     }
   }
 }

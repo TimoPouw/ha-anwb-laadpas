@@ -1,0 +1,13 @@
+{
+  "entity": {
+    "sensor": {
+      "sessions": { "default": "mdi:ev-station" },
+      "month_sessions": { "default": "mdi:calendar-month" },
+      "last_session_start": { "default": "mdi:clock-start" },
+      "last_session_end": { "default": "mdi:clock-end" }
+    }
+  },
+  "services": {
+    "get_sessions": { "service": "mdi:format-list-bulleted" }
+  }
+}
