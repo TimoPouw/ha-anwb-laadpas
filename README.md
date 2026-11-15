@@ -18,22 +18,33 @@ exposes them as sensors and events.
 - A **device per charging card** with its own sensors, and a name you choose.
 - An **event** `anwb_laadpas_new_session` for every new session, for
   automations.
+- **All sessions** in a dashboard (via a sensor attribute) and through the
+  `anwb_laadpas.get_sessions` action.
 - Browser login with MFA, automatic token refresh, reauthentication when the
   login expires, and diagnostics with personal data removed.
 
-## Installation via HACS
+## Installation
+
+### Via HACS (recommended)
 
 1. In HACS, open the menu (three dots, top right) and choose **Custom
    repositories**.
 2. Add `https://github.com/TimoPouw/ha-anwb-laadpas` with type
    **Integration**.
-   This repository is private: HACS needs a GitHub token that can read it.
 3. Install **ANWB Laadpas** and restart Home Assistant.
-4. Go to **Settings > Devices & services > Add integration** and search for
-   **ANWB Laadpas**.
 
-Manual installation: copy `custom_components/anwb_laadpas` into the
-`custom_components` folder of your Home Assistant configuration and restart.
+Home Assistant can also add a repository straight from its GitHub link; use the
+same URL there.
+
+### Manually
+
+Copy `custom_components/anwb_laadpas` into the `custom_components` folder of
+your Home Assistant configuration and restart Home Assistant.
+
+### Adding the integration
+
+Go to **Settings > Devices & services > Add integration** and search for
+**ANWB Laadpas**.
 
 ## Logging in
 
@@ -89,11 +100,68 @@ Account device (`ANWB Laadpas`):
 | Cost this month | EUR | |
 | Total energy | kWh | `total_increasing`, for the Energy dashboard |
 | Total cost | EUR | |
+| Sessions | | Number of sessions; attribute `sessions` holds the full list (see below) |
 
 Each card device has: last session energy (with attributes), cost and end,
 sessions, energy and cost this month, and total energy.
 
 Sessions where the cost is not known yet count as 0 until the cost is filled in.
+
+## Viewing all sessions
+
+### In a dashboard
+
+The **Sessions** sensor has an attribute `sessions` with every session, newest
+first. Each row has `session_id`, `start`, `end` (local time), `duration_minutes`,
+`energy_kwh`, `cost`, `card` (your card name, or the card number),
+`location_name` and `city`. The list is not stored in the recorder database.
+
+A table of the latest 50 sessions with a Markdown card. Check the entity id of
+the Sessions sensor in its settings; with Home Assistant in Dutch it may be
+`sensor.anwb_laadpas_sessies`.
+
+```yaml
+type: markdown
+title: Charging sessions
+content: |
+  | Date | Location | kWh | € | Card |
+  |:--|:--|--:|--:|:--|
+  {% for s in (state_attr('sensor.anwb_laadpas_sessions', 'sessions') or [])[:50] -%}
+  | {{ as_timestamp(s.start) | timestamp_custom('%d-%m-%Y %H:%M') }} | {{ s.location_name }}, {{ s.city }} | {{ '%.2f' | format(s.energy_kwh) }} | {{ '%.2f' | format(s.cost) if s.cost is not none else '' }} | {{ s.card }} |
+  {% endfor %}
+```
+
+### With the `anwb_laadpas.get_sessions` action
+
+Returns sessions with totals, for scripts, automations or **Developer tools >
+Actions**. All fields are optional:
+
+```yaml
+action: anwb_laadpas.get_sessions
+data:
+  start: "2026-11-01"   # sessions started on or after this date
+  end: "2026-11-30"     # sessions started on or before this date
+  card: Tesla           # card name, card number or card id
+  limit: 20
+```
+
+Response:
+
+```yaml
+count: 3
+energy_kwh: 22.96
+cost: 18.4
+sessions:
+  - session_id: NLAAA-900000000
+    start: "2026-11-08T13:15:16+01:00"
+    end: "2026-11-08T13:41:16+01:00"
+    duration_minutes: 26
+    energy_kwh: 14.71
+    cost: 12.11
+    card: Tesla
+    location_name: Example location
+    city: Exampletown
+```
 
 ## Event: `anwb_laadpas_new_session`
 
