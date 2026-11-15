@@ -1,3 +1,5 @@
+<img src="brand/icon.png" alt="ANWB Laadpas" width="96" align="right">
+
 # ANWB Laadpas for Home Assistant
 
 Unofficial Home Assistant integration that reads the charging sessions of your
