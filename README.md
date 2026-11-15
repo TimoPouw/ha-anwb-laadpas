@@ -210,7 +210,23 @@ data:
 Returns `count`, `amount_incl_vat`, `open_amount` and `invoices`, where each
 invoice has `invoice_id`, `number`, `date`, `due_date`, `paid_date`,
 `amount_excl_vat`, `amount_incl_vat`, `vat_rate`, `currency`, `status`, `paid`,
-`type`, `period` and `session_count`.
+`type`, `period`, `session_count`, `pdf_url` and `specification_url`.
+
+### Download links
+
+Every invoice in the **Invoices** and **Last invoice** sensors, and in the
+`get_invoices` response, has a `pdf_url` and a `specification_url`. Opening one
+in the browser downloads the PDF to your computer. The links are signed by Home
+Assistant: they work without logging in, only for that one file, and expire
+after two days (the integration renews them automatically). The PDF is fetched
+from ANWB on first use and kept in the media folder after that.
+
+In a Markdown card, use an HTML link so the browser downloads the file instead
+of the dashboard trying to open it as a page:
+
+```jinja
+<a href="{{ i.pdf_url }}" target="_blank">PDF</a>
+```
 
 ### Downloading PDFs
 
@@ -260,10 +276,10 @@ automation:
 type: markdown
 title: Invoices
 content: |
-  | Date | Period | Sessions | € | Status |
-  |:--|:--|--:|--:|:--|
+  | Date | Period | Sessions | € | Status | |
+  |:--|:--|--:|--:|:--|:--|
   {% for i in state_attr('sensor.anwb_laadpas_invoices', 'invoices') or [] -%}
-  | {{ as_timestamp(i.date) | timestamp_custom('%d-%m-%Y') }} | {{ i.period }} | {{ i.session_count }} | {{ '%.2f' | format(i.amount_incl_vat) }} | {{ 'paid' if i.paid else i.status }} |
+  | {{ as_timestamp(i.date) | timestamp_custom('%d-%m-%Y') }} | {{ i.period }} | {{ i.session_count }} | {{ '%.2f' | format(i.amount_incl_vat) }} | {{ 'paid' if i.paid else i.status }} | {% if i.pdf_url %}<a href="{{ i.pdf_url }}" target="_blank">PDF</a>{% endif %} |
   {% endfor %}
 ```
 
